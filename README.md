@@ -39,6 +39,7 @@ MERN Stack has been used for this entire project<br/>
 
 ## About
 
+This is only frontend<br/>
 Seats can be reserved online for watching movies. <br/>
 Movies can be added from the admin panel.
 
