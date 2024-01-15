@@ -28,19 +28,40 @@ export default function Header() {
             bg-[#0f0f0ff2] lg:bg-transparent left-0 top-12 p-5 lg:top-0 
           `}
         >
-          <Link className={"nav-link-mobile lg:nav-link-desktop"} to={"/"}>
+          <Link
+            onClick={() => {
+              isMenuOpen && setMenuOpen(false);
+            }}
+            className={"nav-link-mobile lg:nav-link-desktop"}
+            to={"/"}
+          >
             Home
           </Link>
-          <Link className={"nav-link-mobile lg:nav-link-desktop"} to={"/about"}>
+          <Link
+            onClick={() => {
+              isMenuOpen && setMenuOpen(false);
+            }}
+            className={"nav-link-mobile lg:nav-link-desktop"}
+            to={"/about"}
+          >
             About
           </Link>
           <Link
+            onClick={() => {
+              isMenuOpen && setMenuOpen(false);
+            }}
             className={"nav-link-mobile lg:nav-link-desktop"}
             to={"/movies"}
           >
             Movies
           </Link>
-          <Link className={"nav-link-mobile lg:nav-link-desktop"} to={"/time"}>
+          <Link
+            onClick={() => {
+              isMenuOpen && setMenuOpen(false);
+            }}
+            className={"nav-link-mobile lg:nav-link-desktop"}
+            to={"/time"}
+          >
             Time Table
           </Link>
         </div>
