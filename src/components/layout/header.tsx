@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Logo from "./../../../public/logo-white.png";
 import { Link } from "react-router-dom";
+import MenuBar from "../../assets/icons/menu";
 
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -21,18 +22,34 @@ export default function Header() {
       </nav>
       <nav className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl text-sm text-gray-300 font-semibold">
         <div
-          className={`${
-            isMenuOpen ? "block" : "hidden"
-          } flex flex-col lg:flex-row lg:block justify-between items-center w-full lg:w-auto lg:space-x-8 `}
+          className={`
+            ${isMenuOpen ? "visible" : "invisible"} 
+            flex flex-col lg:flex-row absolute lg:relative lg:block lg:visible justify-between items-center w-full lg:w-auto lg:space-x-8
+            bg-[#0f0f0ff2] lg:bg-transparent left-0 top-12 p-5 lg:top-0 
+          `}
         >
-          <Link to={"/"}>Home</Link>
-          <Link to={"/about"}>About</Link>
-          <Link to={"/movies"}>Movies</Link>
-          <Link to={"/time"}>Time Table</Link>
+          <Link className={"nav-link-mobile lg:nav-link-desktop"} to={"/"}>
+            Home
+          </Link>
+          <Link className={"nav-link-mobile lg:nav-link-desktop"} to={"/about"}>
+            About
+          </Link>
+          <Link
+            className={"nav-link-mobile lg:nav-link-desktop"}
+            to={"/movies"}
+          >
+            Movies
+          </Link>
+          <Link className={"nav-link-mobile lg:nav-link-desktop"} to={"/time"}>
+            Time Table
+          </Link>
         </div>
       </nav>
       <nav className="flex items-center ">
-        <Link to={"/login"} className="m-1 text-md font-semibold text-gray-400">
+        <Link
+          to={"/login"}
+          className="m-1 text-md font-bold text-gray-400 px-2 py-1 rounded-3xl hover:bg-transparent-1 hover:text-black"
+        >
           Login
         </Link>
         <Link
@@ -41,6 +58,11 @@ export default function Header() {
         >
           Register
         </Link>
+      </nav>
+      <nav className="block lg:hidden">
+        <button onClick={toggleMenu}>
+          <MenuBar width={25} height={25} />
+        </button>
       </nav>
     </header>
   );
