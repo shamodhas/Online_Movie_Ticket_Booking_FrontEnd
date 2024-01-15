@@ -9,7 +9,6 @@ export default function Home() {
   return (
     <div className="text-white font-bold p-5">
       <div className="flex flex-col lg:flex-row justify-center lg:justify-between">
-        {/* left */}
         <div className="flex justify-center">
           <div className="mt-0 lg:mt-[10%]">
             <h1 className="font-bold text-7xl w-fit">You Can Book</h1>
@@ -29,7 +28,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* right */}
         <div className="flex justify-center items-center">
           <img src={MainImage} alt="main image" />
         </div>
