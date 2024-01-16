@@ -63,10 +63,10 @@ export default function Home() {
             and everything from one place
           </p>
           <div className="mt-2 lg:my-12 flex items-center justify-center gap-4 w-full">
-            <button className="whitespace-nowrap w-fit px-2 py-1 lg:px-6 lg:py-2 text-sm lg:text-lg bg-transparent-1 border border-[#BDC3C7] hover:text-black hover:bg-[#BDC3C7] font-bold">
+            <button className="whitespace-nowrap w-fit lg:w-full px-2 py-1 lg:px-6 lg:py-2 text-sm lg:text-lg bg-transparent-1 border border-[#BDC3C7] hover:text-black hover:bg-[#BDC3C7] font-bold">
               All Movies
             </button>
-            <button className="whitespace-nowrap w-fit px-2 py-1 lg:px-6 lg:py-2 text-sm lg:text-lg bg-transparent-1 border border-[#BDC3C7] hover:text-black hover:bg-[#BDC3C7] font-bold">
+            <button className="whitespace-nowrap w-fit lg:w-full px-2 py-1 lg:px-6 lg:py-2 text-sm lg:text-lg bg-transparent-1 border border-[#BDC3C7] hover:text-black hover:bg-[#BDC3C7] font-bold">
               {isAuth ? "Book Now" : "Sign in first"}
             </button>
           </div>
