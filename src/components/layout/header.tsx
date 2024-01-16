@@ -75,13 +75,13 @@ export default function Header() {
         </Link>
         <Link
           to={"/register"}
-          className="m-1 text-sm button text-primary-600 border border-white hover:bg-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300"
+          className="m-1 text-sm button px-6 py-2 text-primary-600 border border-white hover:bg-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300"
         >
           Register
         </Link>
       </nav>
       <nav className="block lg:hidden">
-        <button onClick={toggleMenu}>
+        <button className="p-2" onClick={toggleMenu}>
           <MenuBar width={25} height={25} />
         </button>
       </nav>
