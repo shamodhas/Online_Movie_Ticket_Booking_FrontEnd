@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MainImage from "./../assets/images/home-image.png";
-import MovieCard from "../components/movie-card";
+import MovieCard from "../components/card/movie-card";
 
 import JapanMovieImage from "../assets/testingImage/japan.jpg";
 import AnimalMovieImage from "../assets/testingImage/animal.jpg";
