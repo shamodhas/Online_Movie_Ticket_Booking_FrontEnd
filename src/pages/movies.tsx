@@ -1,47 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import MovieCard from "../components/card/movie-card";
 import Input from "../components/input/input";
-
-import JapanMovieImage from "../assets/testingImage/japan.jpg";
-import AnimalMovieImage from "../assets/testingImage/animal.jpg";
-import AquamanMovieImage from "../assets/testingImage/aquaman.jpg";
-import LeoMovieImage from "../assets/testingImage/leo.jpg";
-import CaptionMillerMovieImage from "../assets/testingImage/caption-miller.jpg";
-import DevilMovieImage from "../assets/testingImage/devil.jpg";
-const movies = [
-  {
-    name: "Japan",
-    language: "Tamil",
-    image: JapanMovieImage,
-  },
-  {
-    name: "Animal",
-    language: "Hindi",
-    image: AnimalMovieImage,
-  },
-  {
-    name: "Aquaman",
-    language: "English",
-    image: AquamanMovieImage,
-  },
-  {
-    name: "Leo",
-    language: "Tamil",
-    image: LeoMovieImage,
-  },
-  {
-    name: "Caption Miller",
-    language: "Tamil",
-    image: CaptionMillerMovieImage,
-  },
-  {
-    name: "Devil",
-    language: "Tamil",
-    image: DevilMovieImage,
-  },
-];
 
 export default function Movies() {
   const [name, setName] = useState("");
@@ -52,6 +13,40 @@ export default function Movies() {
   const [endDate, setEndDate] = useState("");
   const [trailerLink, setTrailerLink] = useState("");
   const [image, setImage] = useState<any>(null);
+
+  const [movies, setMovies] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    loadAllMovies(1);
+  }, []);
+
+  const loadAllMovies = async (page: number) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/movie/all?size=4&page=" + page
+      );
+      setMovies(response.data.data);
+      setTotalPages(response.data.pageCount);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Fail to load movies",
+      });
+      console.log(err);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+    loadAllMovies(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    loadAllMovies(currentPage - 1);
+  };
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -71,6 +66,13 @@ export default function Movies() {
     data.append("file", image);
 
     try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        showLoaderOnConfirm: true,
+        showConfirmButton: false,
+      });
+
       const response = await axios.post("http://localhost:8080/movie", data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -79,9 +81,22 @@ export default function Movies() {
         },
       });
 
+      Swal.close();
+      Swal.fire({
+        icon: "success",
+        title: "Movie saved",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
       console.log(response.data);
-    } catch (error) {
-      console.error("Error uploading data:", error);
+    } catch (error: any) {
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+      });
+      console.log(error.response.data.message);
     }
   };
 
@@ -189,16 +204,33 @@ export default function Movies() {
         </form>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
-        {movies.map((movie, index) => {
+        {movies.map((movie: any, index) => {
           return (
             <MovieCard
               key={index}
-              image={movie.image}
+              image={movie.imageUrl}
               name={movie.name}
               language={movie.language}
             />
           );
         })}
+      </div>
+      <div className="text-white flex justify-center items-center m-5">
+        <button
+          className="bg-transparent-1 py-1 px-5 w-fit disabled:bg-black"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span className="mx-4 whitespace-nowrap">{`Page ${currentPage} of ${totalPages}`}</span>
+        <button
+          className="bg-transparent-1 py-1 px-5 w-fit disabled:bg-black"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
       </div>
     </>
   );

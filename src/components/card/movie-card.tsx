@@ -1,6 +1,6 @@
 
 type MovieCardProps = {
-  image: string;
+  image: any;
   name: string;
   language: string;
 };
