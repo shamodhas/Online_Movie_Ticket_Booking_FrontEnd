@@ -8,7 +8,7 @@ import { UserRoles } from "../../util/user";
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [user] = useContext(UserContext);
-  const guestNavLink = ["about", "movies", "theaters"];
+  const guestNavLink = ["about", "movies", "theaters","my-movies"];
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
@@ -67,7 +67,7 @@ export default function Header() {
           </Link>
           <Link
             to={"/register"}
-            className="m-1 text-sm button px-6 py-2 text-primary-600 border border-white hover:bg-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300"
+            className="m-1 text-sm button px-6 py-2 text-white border border-white hover:bg-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300"
           >
             Register
           </Link>

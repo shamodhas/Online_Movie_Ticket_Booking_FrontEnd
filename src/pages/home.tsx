@@ -1,51 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainImage from "./../assets/images/home-image.png";
 import MovieCard from "../components/card/movie-card";
-
-import JapanMovieImage from "../assets/testingImage/japan.jpg";
-import AnimalMovieImage from "../assets/testingImage/animal.jpg";
-import AquamanMovieImage from "../assets/testingImage/aquaman.jpg";
-import LeoMovieImage from "../assets/testingImage/leo.jpg";
-import CaptionMillerMovieImage from "../assets/testingImage/caption-miller.jpg";
-import DevilMovieImage from "../assets/testingImage/devil.jpg";
 import { Link } from "react-router-dom";
 import RightArrow from "../assets/icons/right-arrow";
-
-const lastFiveMovies = [
-  {
-    name: "Japan",
-    language: "Tamil",
-    image: JapanMovieImage,
-  },
-  {
-    name: "Animal",
-    language: "Hindi",
-    image: AnimalMovieImage,
-  },
-  {
-    name: "Aquaman",
-    language: "English",
-    image: AquamanMovieImage,
-  },
-  {
-    name: "Leo",
-    language: "Tamil",
-    image: LeoMovieImage,
-  },
-  {
-    name: "Caption Miller",
-    language: "Tamil",
-    image: CaptionMillerMovieImage,
-  },
-  {
-    name: "Devil",
-    language: "Tamil",
-    image: DevilMovieImage,
-  },
-];
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Home() {
   const [isAuth] = useState(false);
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/movie/all?size=5&page=1"
+        );
+        setMovies(response.data.data);
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Fail to load movies",
+        });
+        console.log(err);
+      }
+    };
+
+    loadMovies();
+  }, []);
 
   return (
     <div className="text-white font-bold p-5 mt-12 mx-4">
@@ -78,14 +60,14 @@ export default function Home() {
       <div className="flex flex-col mt-2 lg:mt-12 lg:text-white">
         <h1 className="text-md text-gray-500">Latest movies</h1>
         <div className="grid grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
-          {lastFiveMovies?.map((movie, index) => {
+          {movies?.map((movie: any, index) => {
             if (index > 4) {
               return;
             }
             return (
               <MovieCard
                 key={index}
-                image={movie.image}
+                image={movie.imageUrl}
                 name={movie.name}
                 language={movie.language}
               />
