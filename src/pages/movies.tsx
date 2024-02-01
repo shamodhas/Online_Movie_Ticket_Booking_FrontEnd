@@ -39,68 +39,17 @@ export default function Movies() {
     loadAllMovies(currentPage - 1);
   };
 
-  const handleDeleteMovie = async (movie: any) => {
-    console.log(movie._id)
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        showLoaderOnConfirm: true,
-        showConfirmButton: false,
-      });
-
-      const response = await axios.delete(
-        "http://localhost:8080/movie/" + movie._id,
-        {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y",
-          },
-        }
-      );
-      loadAllMovies(currentPage);
-      Swal.close();
-      Swal.fire({
-        icon: "success",
-        title: "Movie deleted",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-
-      console.log(response.data);
-    } catch (error: any) {
-      Swal.close();
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message,
-      });
-      console.log(error.response.data.message);
-    }
-  };
-
   return (
     <>
       <div className="grid justify-center items-center grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
         {movies.map((movie: any, index) => {
           return (
-            <div>
-              <MovieCard
-                key={index}
-                image={movie.imageUrl}
-                name={movie.name}
-                language={movie.language}
-              />
-              <div className="flex justify-center items-center mt-5">
-                <button
-                  onClick={() => {
-                    handleDeleteMovie(movie);
-                  }}
-                  className="bg-white rounded-xl w-[40px]"
-                >
-                  <DeleteIcon />
-                </button>
-              </div>
-            </div>
+            <MovieCard
+              key={index}
+              image={movie.imageUrl}
+              name={movie.name}
+              language={movie.language}
+            />
           );
         })}
       </div>

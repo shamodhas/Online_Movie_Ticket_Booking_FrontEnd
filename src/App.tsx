@@ -14,7 +14,7 @@ import MovieEditor from "./pages/movies/movie-editor";
 import MyMovies from "./pages/movies/my-movies";
 
 function App(): JSX.Element {
-  const [user, setUser] = useState<User>({ role: UserRoles.CUSTOMER });
+  const [user, setUser] = useState<User>({ role: UserRoles.THEATER_EMPLOYEE });
 
   return (
     <UserContext.Provider value={[user, setUser]}>
