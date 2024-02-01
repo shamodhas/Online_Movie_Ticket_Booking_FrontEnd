@@ -14,7 +14,7 @@ import MovieEditor from "./pages/movies/movie-editor";
 import MyMovies from "./pages/movies/my-movies";
 
 function App(): JSX.Element {
-  const [user, setUser] = useState<User>({ role: UserRoles.GUEST });
+  const [user, setUser] = useState<User>({ role: UserRoles.CUSTOMER });
 
   return (
     <UserContext.Provider value={[user, setUser]}>
@@ -33,8 +33,12 @@ function App(): JSX.Element {
           <Route path="about" element={<About />} />
           <Route path="movies" element={<Movies />} />
           <Route path="theaters" element={<Theaters />} />
-          <Route path="movie-editor" element={<MovieEditor />} />
-          <Route path="my-movies" element={<MyMovies />} />
+          {user.role !== UserRoles.GUEST && (
+            <Route path="/" element={<Outlet />}>
+              <Route path="movie-editor" element={<MovieEditor />} />
+              <Route path="my-movies" element={<MyMovies />} />
+            </Route>
+          )}
         </Route>
       </Routes>
     </UserContext.Provider>
