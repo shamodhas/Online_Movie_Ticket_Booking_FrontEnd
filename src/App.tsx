@@ -33,7 +33,9 @@ function App(): JSX.Element {
           <Route path="about" element={<About />} />
           <Route path="movies" element={<Movies />} />
           <Route path="theaters" element={<Theaters />} />
-          {user.role !== UserRoles.GUEST && (
+          {!(
+            user.role === UserRoles.GUEST || user.role === UserRoles.CUSTOMER
+          ) && (
             <Route path="/" element={<Outlet />}>
               <Route path="movie-editor" element={<MovieEditor />} />
               <Route path="my-movies" element={<MyMovies />} />

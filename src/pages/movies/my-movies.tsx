@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MovieEditor from "./movie-editor";
 import axios from "axios";
 import Swal from "sweetalert2";
 import MovieCard from "../../components/card/movie-card";
 import DeleteIcon from "../../assets/icons/delete";
+import UserContext from "../../context/user-context";
+import EditIcon from "../../assets/icons/edit";
 
 function MyMovies() {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [user] = useContext(UserContext);
 
   useEffect(() => {
     loadAllMyMovies(currentPage);
@@ -87,24 +90,34 @@ function MyMovies() {
 
   return (
     <>
-      <MovieEditor />
-      <div className="grid justify-center items-center grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
+      <div>
+        <button>Add Movie</button>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
         {movies.map((movie: any, index) => {
           return (
-            <div key={index}>
+            <div key={index} className="flex flex-col justify-between">
               <MovieCard
                 image={movie.imageUrl}
                 name={movie.name}
                 language={movie.language}
               />
-              <div className="flex justify-center items-center mt-5">
+              <div className="flex justify-center items-center mt-3 gap-1">
                 <button
                   onClick={() => {
                     handleDeleteMovie(movie);
                   }}
-                  className="bg-white rounded-xl w-[40px]"
+                  className="bg-white rounded-xl w-[40px] hover:bg-red-600"
                 >
-                  <DeleteIcon />
+                  <DeleteIcon color="black" />
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteMovie(movie);
+                  }}
+                  className="bg-white rounded-xl w-[40px] hover:bg-red-600"
+                >
+                  <EditIcon color="black" />
                 </button>
               </div>
             </div>
