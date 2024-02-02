@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import MovieEditor from "./movie-editor";
 import axios from "axios";
 import Swal from "sweetalert2";
 import MovieCard from "../../components/card/movie-card";
@@ -96,10 +95,19 @@ function MyMovies() {
     });
   };
 
+  const handleGoAddMovie = () => {
+    navigate("/movie-editor");
+  };
+
   return (
     <>
-      <div>
-        <button>Add Movie</button>
+      <div className="flex justify-center items-center mt-5 text-white">
+        <button
+          onClick={handleGoAddMovie}
+          className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
+        >
+          Add New Movie
+        </button>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
         {movies.map((movie: any, index) => {

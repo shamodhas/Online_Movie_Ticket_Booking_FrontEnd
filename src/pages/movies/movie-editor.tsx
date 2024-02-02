@@ -2,16 +2,17 @@ import { useRef, useState } from "react";
 import Input from "../../components/input/input";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Movie } from "../../types/movie";
 
 function MovieEditor() {
-  const navigate = useNavigate();
   const location = useLocation();
 
   // let movie: Movie | null = location?.state?.movie ?? null;
 
-  const [movie, setMovie] = useState(location?.state?.movie ?? null);
+  const [movie, setMovie] = useState<Movie | null>(
+    location?.state?.movie ?? null
+  );
 
   const [name, setName] = useState(movie ? movie.name : "");
   const [director, setDirector] = useState(movie ? movie.director : "");
