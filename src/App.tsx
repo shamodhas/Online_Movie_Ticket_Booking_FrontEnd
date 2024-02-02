@@ -8,7 +8,7 @@ import Theaters from "./pages/theaters";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import { useState } from "react";
-import { User, UserRoles } from "./util/user";
+import { User, UserRoles } from "./types/user";
 import UserContext from "./context/user-context";
 import MovieEditor from "./pages/movies/movie-editor";
 import MyMovies from "./pages/movies/my-movies";

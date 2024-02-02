@@ -6,12 +6,14 @@ import MovieCard from "../../components/card/movie-card";
 import DeleteIcon from "../../assets/icons/delete";
 import UserContext from "../../context/user-context";
 import EditIcon from "../../assets/icons/edit";
+import { useNavigate } from "react-router-dom";
 
 function MyMovies() {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [user] = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadAllMyMovies(currentPage);
@@ -88,6 +90,12 @@ function MyMovies() {
     }
   };
 
+  const handleEditMovie = (movie: any) => {
+    navigate("/movie-editor", {
+      state: { movie },
+    });
+  };
+
   return (
     <>
       <div>
@@ -107,17 +115,17 @@ function MyMovies() {
                   onClick={() => {
                     handleDeleteMovie(movie);
                   }}
-                  className="bg-white rounded-xl w-[40px] hover:bg-red-600"
+                  className="bg-transparent-1 rounded-xl w-[40px] hover:bg-red-600"
                 >
-                  <DeleteIcon color="black" />
+                  <DeleteIcon color={"white"} />
                 </button>
                 <button
                   onClick={() => {
-                    handleDeleteMovie(movie);
+                    handleEditMovie(movie);
                   }}
-                  className="bg-white rounded-xl w-[40px] hover:bg-red-600"
+                  className="bg-transparent-1 rounded-xl w-[40px] h-[40px] hover:bg-yellow-600"
                 >
-                  <EditIcon color="black" />
+                  <EditIcon color="white" />
                 </button>
               </div>
             </div>

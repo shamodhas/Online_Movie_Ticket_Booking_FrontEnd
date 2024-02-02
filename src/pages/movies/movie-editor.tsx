@@ -1,22 +1,34 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import Input from "../../components/input/input";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Movie } from "../../types/movie";
 
 function MovieEditor() {
-  const [name, setName] = useState("");
-  const [director, setDirector] = useState("");
-  const [language, setLanguage] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [trailerLink, setTrailerLink] = useState("");
-  const [image, setImage] = useState<any>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // let movie: Movie | null = location?.state?.movie ?? null;
+
+  const [movie, setMovie] = useState(location?.state?.movie ?? null);
+
+  const [name, setName] = useState(movie ? movie.name : "");
+  const [director, setDirector] = useState(movie ? movie.director : "");
+  const [language, setLanguage] = useState(movie ? movie.language : "");
+  const [description, setDescription] = useState(
+    movie ? movie.description : ""
+  );
+  const [startDate, setStartDate] = useState(movie ? movie.startDate : "");
+  const [endDate, setEndDate] = useState(movie ? movie.endDate : "");
+  const [trailerLink, setTrailerLink] = useState(
+    movie ? movie.trailerLink : ""
+  );
+  const [image, setImage] = useState<any>(null);
+  const fileInputRef = useRef(null);
   const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    console.log(file);
-    setImage(file);
+    const imageFile = e.target.files[0];
+    setImage(imageFile);
   };
 
   const handleSaveMovie = async () => {
@@ -25,8 +37,8 @@ function MovieEditor() {
     data.append("director", director);
     data.append("language", language);
     data.append("description", description);
-    data.append("startDate", startDate);
-    data.append("endDate", endDate);
+    data.append("startDate", startDate.toString());
+    data.append("endDate", endDate.toString());
     data.append("trailerLink", trailerLink);
     data.append("file", image);
 
@@ -64,10 +76,28 @@ function MovieEditor() {
       console.log(error.response.data.message);
     }
   };
+
+  const handleReset = () => {
+    setMovie(null);
+    setName("");
+    setDirector("");
+    setLanguage("");
+    setDescription("");
+    setStartDate("");
+    setEndDate("");
+    setTrailerLink("");
+    setImage(null);
+
+    if (fileInputRef.current) {
+      // @ts-ignore
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <div className="m-5 flex justify-center">
       <form className="flex flex-col justify-center items-center bg-transparent-1 w-[80%] md:w-[70%] lg:w-[50%] p-8 rounded-lg">
-        <h1 className="text-white mb-2">Add Movie</h1>
+        <h1 className="text-white mb-2">{movie ? "Update" : "Add"} Movie</h1>
         <Input
           type={"text"}
           name={"movie_name"}
@@ -124,7 +154,7 @@ function MovieEditor() {
             callBack={(e: any) => {
               setStartDate(e.target.value);
             }}
-            value={startDate}
+            value={startDate?.toString().split("T")[0]}
           />
           <Input
             type={"date"}
@@ -135,7 +165,7 @@ function MovieEditor() {
             callBack={(e: any) => {
               setEndDate(e.target.value);
             }}
-            value={endDate}
+            value={endDate?.toString().split("T")[0]}
           />
         </div>
         <Input
@@ -149,20 +179,45 @@ function MovieEditor() {
           }}
           value={trailerLink}
         />
-        <Input
-          type={"file"}
-          name={"movie_image"}
-          placeholder={"image"}
-          label={"image"}
-          optional={false}
-          callBack={handleImageChange}
-        />
+
+        <div className={"w-full"}>
+          <label
+            htmlFor="movie_image"
+            className="block text-white text-xs mb-1"
+          >
+            image <span className="text-red-600">*</span>
+          </label>
+          <input
+            type="file"
+            id="movie_image"
+            placeholder="image"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+          />
+        </div>
+        {movie ? (
+          <button
+            type="button"
+            className=" bg-green-500 py-1 px-4 text-white font-semibold"
+            onClick={handleSaveMovie}
+          >
+            Update
+          </button>
+        ) : (
+          <button
+            type="button"
+            className=" bg-green-500 py-1 px-4 text-white font-semibold"
+            onClick={handleSaveMovie}
+          >
+            Save
+          </button>
+        )}
         <button
           type="button"
-          className=" bg-green-500 py-1 px-4"
-          onClick={handleSaveMovie}
+          className=" bg-red-500 py-1 px-4 mt-2 text-white"
+          onClick={handleReset}
         >
-          Save
+          Reset
         </button>
       </form>
     </div>

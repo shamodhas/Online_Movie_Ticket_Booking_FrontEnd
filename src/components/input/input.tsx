@@ -6,6 +6,7 @@ type inputProps = {
   optional: boolean;
   callBack: Function;
   value?: string;
+  ref?:any
 };
 
 const Input = (props: inputProps) => {
@@ -21,6 +22,7 @@ const Input = (props: inputProps) => {
         placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.callBack(e, props.name)}
+        ref={props.ref}
       />
     </div>
   );

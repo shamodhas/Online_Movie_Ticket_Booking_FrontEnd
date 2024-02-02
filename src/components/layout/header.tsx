@@ -3,12 +3,18 @@ import Logo from "./../../../public/logo-white.png";
 import { Link } from "react-router-dom";
 import MenuBar from "../../assets/icons/menu";
 import UserContext from "../../context/user-context";
-import { UserRoles } from "../../util/user";
+import { UserRoles } from "../../types/user";
 
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [user] = useContext(UserContext);
-  const guestNavLink = ["about", "movies", "theaters","my-movies"];
+  const guestNavLink = [
+    "about",
+    "movies",
+    "theaters",
+    "my-movies",
+    "movie-editor",
+  ];
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
