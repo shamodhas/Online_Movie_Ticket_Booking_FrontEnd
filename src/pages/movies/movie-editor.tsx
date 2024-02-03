@@ -2,13 +2,13 @@ import { useRef, useState } from "react";
 import Input from "../../components/input/input";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Movie } from "../../types/movie";
+import CloseButton from "../../components/button/close-button";
 
 function MovieEditor() {
   const location = useLocation();
-
-  // let movie: Movie | null = location?.state?.movie ?? null;
+  const navigate = useNavigate();
 
   const [movie, setMovie] = useState<Movie | null>(
     location?.state?.movie ?? null
@@ -78,6 +78,8 @@ function MovieEditor() {
     }
   };
 
+  const handleUpdateMovie = () => {};
+
   const handleReset = () => {
     setMovie(null);
     setName("");
@@ -94,10 +96,19 @@ function MovieEditor() {
       fileInputRef.current.value = "";
     }
   };
+  const handleClose = () => {
+    navigate("/my-movies");
+  };
 
   return (
-    <div className="m-5 flex justify-center">
-      <form className="flex flex-col justify-center items-center bg-transparent-1 w-[80%] md:w-[70%] lg:w-[50%] p-8 rounded-lg">
+    <div className="m-5 flex justify-center relative">
+      <form className="flex flex-col justify-center items-center bg-transparent-1 w-[80%] md:w-[70%] lg:w-[50%] p-8 rounded-lg relative">
+        <CloseButton
+          className={
+            "absolute top-[-5px] right-[-5px] hover:w-[30px] hover:right-[-7px] hover:h-[30px] hover:top-[-7px] hover:text-xl"
+          }
+          callBack={handleClose}
+        />
         <h1 className="text-white mb-2">{movie ? "Update" : "Add"} Movie</h1>
         <Input
           type={"text"}
@@ -110,7 +121,7 @@ function MovieEditor() {
           }}
           value={name}
         />
-        <div className="flex w-full gap-4">
+        <div className="flex flex-col md:flex-row w-full gap-4">
           <Input
             type={"text"}
             name={"movie_director"}
@@ -145,7 +156,7 @@ function MovieEditor() {
           }}
           value={description}
         />
-        <div className="flex w-full gap-4">
+        <div className="flex flex-col md:flex-row w-full gap-4">
           <Input
             type={"date"}
             name={"movie_start_date"}
@@ -200,7 +211,7 @@ function MovieEditor() {
           <button
             type="button"
             className=" bg-green-500 py-1 px-4 text-white font-semibold"
-            onClick={handleSaveMovie}
+            onClick={handleUpdateMovie}
           >
             Update
           </button>

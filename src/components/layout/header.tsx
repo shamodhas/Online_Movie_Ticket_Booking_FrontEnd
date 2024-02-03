@@ -76,7 +76,7 @@ export default function Header() {
         <nav className="flex items-center ">
           <Link
             to={"/profile"}
-            className="m-1 text-sm button px-6 py-2 text-primary-600 border text-white border-white hover:bg-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300"
+            className="m-1 text-sm button px-6 py-2 border text-white border-white hover:bg-black transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-75 duration-300"
           >
             Profile
           </Link>
