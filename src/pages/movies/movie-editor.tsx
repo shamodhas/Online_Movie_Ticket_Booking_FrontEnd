@@ -26,7 +26,9 @@ function MovieEditor() {
     movie ? movie.trailerLink : ""
   );
   const [image, setImage] = useState<any>(null);
+  
   const fileInputRef = useRef(null);
+
   const handleImageChange = (e: any) => {
     const imageFile = e.target.files[0];
     setImage(imageFile);

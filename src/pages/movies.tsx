@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import MovieCard from "../components/card/movie-card";
-import DeleteIcon from "../assets/icons/delete";
 
 export default function Movies() {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
 
   useEffect(() => {
     loadAllMovies(currentPage);
@@ -16,7 +16,7 @@ export default function Movies() {
   const loadAllMovies = async (page: number) => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/movie/all?size=6&page=" + page
+        `${movieEndPoint}/all?size=${5}&page=${page}`
       );
       setMovies(response.data.data);
       setTotalPages(response.data.pageCount);
@@ -41,7 +41,7 @@ export default function Movies() {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 m-5">
         {movies.map((movie: any, index) => {
           return (
             <MovieCard

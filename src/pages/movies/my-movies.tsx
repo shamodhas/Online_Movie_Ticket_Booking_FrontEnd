@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import MovieCard from "../../components/card/movie-card";
 import DeleteIcon from "../../assets/icons/delete";
-import UserContext from "../../context/user-context";
 import EditIcon from "../../assets/icons/edit";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +10,8 @@ function MyMovies() {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [user] = useContext(UserContext);
   const navigate = useNavigate();
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
 
   useEffect(() => {
     loadAllMyMovies(currentPage);
@@ -21,7 +20,7 @@ function MyMovies() {
   const loadAllMyMovies = async (page: number) => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/movie/my?size=6&page=" + page,
+        `${movieEndPoint}/my?size=${5}&page=${page}`,
         {
           headers: {
             Authorization:
@@ -100,16 +99,18 @@ function MyMovies() {
   };
 
   return (
-    <>
-      <div className="flex justify-center items-center mt-5 text-white">
-        <button
-          onClick={handleGoAddMovie}
-          className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
-        >
-          Add New Movie
-        </button>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 m-5">
+    <div>
+      {
+        <div className="flex justify-center items-center mt-5 text-white">
+          <button
+            onClick={handleGoAddMovie}
+            className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
+          >
+            Add New Movie
+          </button>
+        </div>
+      }
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 m-5">
         {movies.map((movie: any, index) => {
           return (
             <div key={index} className="flex flex-col justify-between">
@@ -157,7 +158,7 @@ function MyMovies() {
           Next
         </button>
       </div>
-    </>
+    </div>
   );
 }
 
