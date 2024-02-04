@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import EditIcon from "../../assets/icons/edit";
 import DeleteIcon from "../../assets/icons/delete";
+import EyeIcon from "../../assets/icons/eye";
 
 function MyTheaters() {
   const navigate = useNavigate();
@@ -117,6 +118,12 @@ function MyTheaters() {
     });
   };
 
+  const handleViewHalls = (theater: any) => {
+    navigate("/theater-halls", {
+      state: { theater, currentPage },
+    });
+  };
+
   return (
     <div className="w-full h-full ">
       <div className="flex justify-center items-center mt-5 text-white gap-4">
@@ -124,7 +131,7 @@ function MyTheaters() {
           onClick={handleGoAddTheater}
           className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
         >
-          Add New Movie
+          Add New Theater
         </button>
         <button
           onClick={handleGoAddHalls}
@@ -143,6 +150,7 @@ function MyTheaters() {
               <th>Contact</th>
               <th>Edit</th>
               <th>Delete</th>
+              <th>Halls</th>
             </tr>
           </thead>
           <tbody className="text-white">
@@ -179,6 +187,18 @@ function MyTheaters() {
                         }}
                       >
                         <DeleteIcon color="white" />
+                      </button>
+                    </div>
+                  </td>
+                  <td className="py-2">
+                    <div className="flex justify-center">
+                      <button
+                        className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-blue-600 p-2"
+                        onClick={() => {
+                          handleViewHalls(theater);
+                        }}
+                      >
+                        <EyeIcon color="white" />
                       </button>
                     </div>
                   </td>

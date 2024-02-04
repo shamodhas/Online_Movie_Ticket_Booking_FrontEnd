@@ -14,7 +14,6 @@ export default function Header() {
     "theaters",
     "my-movies",
     "my-theaters",
-    "theater-halls",
   ];
 
   const toggleMenu = () => {

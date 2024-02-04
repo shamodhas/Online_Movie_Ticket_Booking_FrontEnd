@@ -15,7 +15,7 @@ function Halls() {
   const [theaters, setTheaters] = useState([]);
   const [selectedTheater, setSelectedTheater] = useState<
     Theater | null | undefined
-  >(null);
+  >(use_location.state.theater);
   const [hall, setHall] = useState<Hall | null | undefined>(null);
   const [halls, setHalls] = useState([]);
   const [hallNumber, setHallNumber] = useState("");
@@ -25,33 +25,37 @@ function Halls() {
   const authToken = import.meta.env.VITE_AUTH;
 
   useEffect(() => {
-    const loadMyAllTheaters = async () => {
-      try {
-        Swal.fire({
-          title: "Loading...",
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-
-        const response = await axios.get(`${theaterEndPoint}/my`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        Swal.close();
-        setTheaters(response.data.data);
-      } catch (err) {
-        Swal.fire({
-          icon: "error",
-          title: "Failed to load theaters",
-        });
-        console.error(err);
-      }
-    };
     loadMyAllTheaters();
+    if (selectedTheater) {
+      loadHalls(selectedTheater._id ?? "");
+    }
   }, []);
+
+  const loadMyAllTheaters = async () => {
+    try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const response = await axios.get(`${theaterEndPoint}/my`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      Swal.close();
+      setTheaters(response.data.data);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed to load theaters",
+      });
+      console.error(err);
+    }
+  };
 
   const handleTheaterChange = (event: any) => {
     const selectedTheaterId = event.target.value;
@@ -245,6 +249,7 @@ function Halls() {
             Select theater
           </label>
           <select
+            value={selectedTheater?._id}
             onChange={handleTheaterChange}
             className="w-full rounded-lg p-1"
           >
@@ -352,7 +357,7 @@ function Halls() {
                       <div className="flex justify-center">
                         <button
                           onClick={() => {
-                            handleDeleteHall(hall._id);
+                            handleDeleteHall(hall._id ?? "");
                           }}
                           className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-red-600 p-2"
                         >
