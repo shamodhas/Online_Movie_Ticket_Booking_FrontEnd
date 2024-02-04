@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export type Movie = {
   id?: string;
   name: string;
@@ -9,5 +11,5 @@ export type Movie = {
   trailerLink: string;
   imageUrl: string;
   status?: string;
-  user?: string;
+  user?: User;
 };

@@ -15,11 +15,21 @@ export default function Movies() {
 
   const loadAllMovies = async (page: number) => {
     try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       const response = await axios.get(
         `${movieEndPoint}/all?size=${5}&page=${page}`
       );
+
       setMovies(response.data.data);
       setTotalPages(response.data.pageCount);
+      Swal.close();
     } catch (err) {
       Swal.fire({
         icon: "error",

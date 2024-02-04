@@ -26,7 +26,7 @@ function MovieEditor() {
     movie ? movie.trailerLink : ""
   );
   const [image, setImage] = useState<any>(null);
-  
+
   const fileInputRef = useRef(null);
 
   const handleImageChange = (e: any) => {
@@ -98,8 +98,11 @@ function MovieEditor() {
       fileInputRef.current.value = "";
     }
   };
+
   const handleClose = () => {
-    navigate("/my-movies");
+    navigate("/my-movies", {
+      state: { currentPage: location?.state?.currentPage ?? 1 },
+    });
   };
 
   return (

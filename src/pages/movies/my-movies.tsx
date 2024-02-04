@@ -4,21 +4,23 @@ import Swal from "sweetalert2";
 import MovieCard from "../../components/card/movie-card";
 import DeleteIcon from "../../assets/icons/delete";
 import EditIcon from "../../assets/icons/edit";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function MyMovies() {
-  const [movies, setMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [movies, setMovies] = useState([]);
+  const [currentPage, setCurrentPage] = useState<number>(
+    location?.state?.currentPage ?? 1
+  );
+  const [totalPages, setTotalPages] = useState(1);
+
   const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
   const authToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y";
 
   useEffect(() => {
-    if(!authToken){
-      navigate('/login')
-    }
     loadAllMyMovies(currentPage);
   }, []);
 
@@ -40,21 +42,40 @@ function MyMovies() {
         title: "Fail to load movies",
       });
       console.log(err);
+      navigate("/login");
+    }
+
+    try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const response = await axios.get(
+        `${movieEndPoint}/my?size=${5}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      setMovies(response.data.data);
+      setTotalPages(response.data.pageCount);
+      Swal.close();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Fail to load movies",
+      });
+      console.log(err);
+      navigate("/login");
     }
   };
 
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    loadAllMyMovies(currentPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    loadAllMyMovies(currentPage - 1);
-  };
-
   const handleDeleteMovie = async (movie: any) => {
-    console.log(movie._id);
     try {
       Swal.fire({
         title: "Loading...",
@@ -63,14 +84,11 @@ function MyMovies() {
         showConfirmButton: false,
       });
 
-      const response = await axios.delete(
-        "http://localhost:8080/movie/" + movie._id,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${movieEndPoint}/${movie._id}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       loadAllMyMovies(currentPage);
       Swal.close();
       Swal.fire({
@@ -91,28 +109,38 @@ function MyMovies() {
     }
   };
 
-  const handleEditMovie = (movie: any) => {
-    navigate("/movie-editor", {
-      state: { movie },
-    });
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+    loadAllMyMovies(currentPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    loadAllMyMovies(currentPage - 1);
   };
 
   const handleGoAddMovie = () => {
-    navigate("/movie-editor");
+    navigate("/movie-editor", {
+      state: { currentPage },
+    });
+  };
+
+  const handleEditMovie = (movie: any) => {
+    navigate("/movie-editor", {
+      state: { movie, currentPage },
+    });
   };
 
   return (
     <div>
-      {
-        <div className="flex justify-center items-center mt-5 text-white">
-          <button
-            onClick={handleGoAddMovie}
-            className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
-          >
-            Add New Movie
-          </button>
-        </div>
-      }
+      <div className="flex justify-center items-center mt-5 text-white">
+        <button
+          onClick={handleGoAddMovie}
+          className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
+        >
+          Add New Movie
+        </button>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 m-5">
         {movies.map((movie: any, index) => {
           return (

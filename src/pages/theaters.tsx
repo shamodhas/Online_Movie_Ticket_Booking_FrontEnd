@@ -22,9 +22,19 @@ export default function Theaters() {
 
   const loadAllTheaters = async (page: number) => {
     try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       const response = await axios.get(
         `${theaterEndPoint}/all?size=${itemsPerPage}&page=${page}`
       );
+
+      Swal.close();
       setTheaters(response.data.data);
       setTotalPages(response.data.pageCount);
     } catch (err) {
