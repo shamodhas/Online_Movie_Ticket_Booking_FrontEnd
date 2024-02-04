@@ -22,8 +22,7 @@ function TheaterEditor() {
   );
 
   const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
-  const authToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y";
+  const authToken = import.meta.env.VITE_AUTH;
 
   const handleSaveTheater = async () => {
     const data = {
@@ -160,7 +159,7 @@ function TheaterEditor() {
         {theater ? (
           <button
             type="button"
-            className=" bg-green-500 py-1 px-4 text-white font-semibold"
+            className=" bg-yellow-500 py-1 px-4 text-white font-semibold"
             onClick={handleUpdateTheater}
           >
             Update

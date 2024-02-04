@@ -17,8 +17,7 @@ function MyTheaters() {
 
   const itemsPerPage = 2;
   const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
-  const authToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y";
+  const authToken = import.meta.env.VITE_AUTH;
 
   useEffect(() => {
     loadAllMyTheaters(currentPage);
@@ -100,8 +99,14 @@ function MyTheaters() {
     loadAllMyTheaters(currentPage - 1);
   };
 
-  const handleGoAddMovie = () => {
+  const handleGoAddTheater = () => {
     navigate("/theater-editor", {
+      state: { currentPage },
+    });
+  };
+
+  const handleGoAddHalls = () => {
+    navigate("/theater-halls", {
       state: { currentPage },
     });
   };
@@ -114,12 +119,18 @@ function MyTheaters() {
 
   return (
     <div className="w-full h-full ">
-      <div className="flex justify-center items-center mt-5 text-white">
+      <div className="flex justify-center items-center mt-5 text-white gap-4">
         <button
-          onClick={handleGoAddMovie}
+          onClick={handleGoAddTheater}
           className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
         >
           Add New Movie
+        </button>
+        <button
+          onClick={handleGoAddHalls}
+          className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white"
+        >
+          Halls
         </button>
       </div>
       <div className="bg-transparent-1 m-8 rounded-lg p-8">
