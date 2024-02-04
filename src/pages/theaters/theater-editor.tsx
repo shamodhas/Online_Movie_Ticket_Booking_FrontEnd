@@ -36,7 +36,6 @@ function TheaterEditor() {
       Swal.fire({
         title: "Loading...",
         allowOutsideClick: false,
-        showLoaderOnConfirm: true,
         showConfirmButton: false,
       });
 
@@ -76,7 +75,6 @@ function TheaterEditor() {
       Swal.fire({
         title: "Loading...",
         allowOutsideClick: false,
-        showLoaderOnConfirm: true,
         showConfirmButton: false,
       });
 

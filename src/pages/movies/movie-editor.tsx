@@ -28,6 +28,9 @@ function MovieEditor() {
   const [image, setImage] = useState<any>(null);
 
   const fileInputRef = useRef(null);
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
+  const authToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y";
 
   const handleImageChange = (e: any) => {
     const imageFile = e.target.files[0];
@@ -49,15 +52,13 @@ function MovieEditor() {
       Swal.fire({
         title: "Loading...",
         allowOutsideClick: false,
-        showLoaderOnConfirm: true,
         showConfirmButton: false,
       });
 
-      const response = await axios.post("http://localhost:8080/movie", data, {
+      await axios.post(movieEndPoint, data, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y",
+          Authorization: `Bearer ${authToken}`,
         },
       });
 
@@ -75,11 +76,52 @@ function MovieEditor() {
         icon: "error",
         title: error.response.data.message,
       });
-      console.log(error.response.data.message);
+      console.log(error);
     }
   };
 
-  const handleUpdateMovie = () => {};
+  const handleUpdateMovie = async () => {
+    const data = {
+      name,
+      director,
+      language,
+      description,
+      startDate: startDate.toString(),
+      endDate: endDate.toString(),
+      trailerLink,
+    };
+
+    try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        showConfirmButton: false,
+      });
+
+      await axios.put(`${movieEndPoint}/${movie?._id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Movie updated",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      handleReset();
+      handleClose();
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: error.response?.data?.message || "Failed to update movie",
+      });
+
+      console.error(error);
+    }
+  };
 
   const handleReset = () => {
     setMovie(null);
@@ -196,9 +238,13 @@ function MovieEditor() {
             htmlFor="movie_image"
             className="block text-white text-xs mb-1"
           >
-            image <span className="text-red-600">*</span>
+            Image{" "}
+            <span className="text-red-600">
+              {movie ? "You can't update image" : "*"}
+            </span>
           </label>
           <input
+            disabled={movie ? true : false}
             type="file"
             id="movie_image"
             placeholder="image"
