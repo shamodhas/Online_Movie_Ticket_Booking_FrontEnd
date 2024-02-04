@@ -14,6 +14,7 @@ import MovieEditor from "./pages/movies/movie-editor";
 import MyMovies from "./pages/movies/my-movies";
 import MyTheaters from "./pages/theaters/my-theaters";
 import TheaterEditor from "./pages/theaters/theater-editor";
+import Halls from "./pages/theaters/halls";
 
 function App(): JSX.Element {
   const [user, setUser] = useState<User>({ role: UserRoles.THEATER_EMPLOYEE });
@@ -43,6 +44,7 @@ function App(): JSX.Element {
               <Route path="theater-editor" element={<TheaterEditor />} />
               <Route path="my-movies" element={<MyMovies />} />
               <Route path="my-theaters" element={<MyTheaters />} />
+              <Route path="theater-halls" element={<Halls />} />
             </Route>
           )}
         </Route>
