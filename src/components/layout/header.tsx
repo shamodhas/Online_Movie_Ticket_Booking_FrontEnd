@@ -8,7 +8,13 @@ import { UserRoles } from "../../types/user";
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [user] = useContext(UserContext);
-  const guestNavLink = ["about", "movies", "theaters", "my-movies"];
+  const guestNavLink = [
+    "about",
+    "movies",
+    "theaters",
+    "my-movies",
+    "my-theaters",
+  ];
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);

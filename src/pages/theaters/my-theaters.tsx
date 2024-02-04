@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-export default function Theaters() {
+function MyTheaters() {
   const [theaters, setTheaters] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -17,13 +17,18 @@ export default function Theaters() {
     if (!authToken) {
       navigate("/login");
     }
-    loadAllTheaters(currentPage);
+    loadAllMyTheaters(currentPage);
   }, []);
 
-  const loadAllTheaters = async (page: number) => {
+  const loadAllMyTheaters = async (page: number) => {
     try {
       const response = await axios.get(
-        `${theaterEndPoint}/all?size=${itemsPerPage}&page=${page}`
+        `${theaterEndPoint}/my?size=${2}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
       );
       setTheaters(response.data.data);
       setTotalPages(response.data.pageCount);
@@ -38,14 +43,13 @@ export default function Theaters() {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
-    loadAllTheaters(currentPage + 1);
+    loadAllMyTheaters(currentPage + 1);
   };
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    loadAllTheaters(currentPage - 1);
+    loadAllMyTheaters(currentPage - 1);
   };
-
   return (
     <div className="w-full h-full ">
       <div className="bg-transparent-1 m-8 rounded-lg p-8">
@@ -97,3 +101,5 @@ export default function Theaters() {
     </div>
   );
 }
+
+export default MyTheaters;
