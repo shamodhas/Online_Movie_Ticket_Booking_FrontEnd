@@ -10,12 +10,12 @@ export default function Home() {
   const [isAuth] = useState(false);
   const [movies, setMovies] = useState([]);
 
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
+
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/movie/all?size=5&page=1"
-        );
+        const response = await axios.get(`${movieEndPoint}/all?size=5&page=1`);
         setMovies(response.data.data);
       } catch (err) {
         Swal.fire({
