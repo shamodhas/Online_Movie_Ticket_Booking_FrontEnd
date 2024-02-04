@@ -5,6 +5,7 @@ import MovieCard from "../../components/card/movie-card";
 import DeleteIcon from "../../assets/icons/delete";
 import EditIcon from "../../assets/icons/edit";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Movie } from "../../types/movie";
 
 function MyMovies() {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ function MyMovies() {
     }
   };
 
-  const handleDeleteMovie = async (movie: any) => {
+  const handleDeleteMovie = async (movie: Movie) => {
     try {
       Swal.fire({
         title: "Loading...",

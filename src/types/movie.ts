@@ -2,6 +2,7 @@ import { User } from "./user";
 
 export type Movie = {
   id?: string;
+  _id?: string;
   name: string;
   director: string;
   language: string;

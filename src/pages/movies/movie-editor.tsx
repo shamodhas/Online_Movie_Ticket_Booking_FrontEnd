@@ -68,8 +68,7 @@ function MovieEditor() {
         showConfirmButton: false,
         timer: 1500,
       });
-
-      console.log(response.data);
+      handleReset();
     } catch (error: any) {
       Swal.close();
       Swal.fire({
@@ -108,12 +107,7 @@ function MovieEditor() {
   return (
     <div className="m-5 flex justify-center relative">
       <form className="flex flex-col justify-center items-center bg-transparent-1 w-[80%] md:w-[70%] lg:w-[50%] p-8 rounded-lg relative">
-        <CloseButton
-          className={
-            "absolute top-[-5px] right-[-5px] hover:w-[30px] hover:right-[-7px] hover:h-[30px] hover:top-[-7px] hover:text-xl"
-          }
-          callBack={handleClose}
-        />
+        <CloseButton callBack={handleClose} />
         <h1 className="text-white mb-2">{movie ? "Update" : "Add"} Movie</h1>
         <Input
           type={"text"}

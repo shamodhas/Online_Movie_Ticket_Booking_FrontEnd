@@ -2,42 +2,163 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Theater } from "../../types/theater";
 import CloseButton from "../../components/button/close-button";
+import Input from "../../components/input/input";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 function TheaterEditor() {
-  const location = useLocation();
+  const use_location = useLocation();
   const navigate = useNavigate();
 
   const [theater, setTheater] = useState<Theater | null>(
-    location?.state?.theater ?? null
+    use_location?.state?.theater ?? null
+  );
+  const [name, setName] = useState(theater?.name ? theater.name : "");
+  const [location, setLocation] = useState(
+    theater?.location ? theater.location : ""
+  );
+  const [mobileNumber, setMobileNumber] = useState(
+    theater?.mobileNumber ? theater?.mobileNumber : ""
   );
 
-  const handleSaveTheater = () => {};
+  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
+  const authToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1YjZhYjQ4NWMxZmE1NmViNzZkYTRkMSIsIm5hbWUiOiJ0ZXN0VHJlZSIsImVtYWlsIjoidGVzdDNAZ21haWwuY29tIiwicGFzc3dvcmQiOiIiLCJtb2JpbGVOdW1iZXIiOiIwNzc4ODg4ODg4Iiwic3RhdHVzIjoiQWN0aXZlIiwicm9sZSI6IlRIRUFURVJfRU1QTE9ZRUUiLCJfX3YiOjB9LCJpYXQiOjE3MDY0NzAyODUsImV4cCI6MTcwNzA3NTA4NX0.5cpb5VPIQxIlcQ1iaYOTDV8qWcEgE8JqyyQS79K7l9Y";
 
-  const handleUpdateTheater = () => {};
+  const handleSaveTheater = async () => {
+    const data = {
+      name,
+      location,
+      mobileNumber,
+    };
+
+    try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        showLoaderOnConfirm: true,
+        showConfirmButton: false,
+      });
+
+      await axios.post(theaterEndPoint, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      Swal.close();
+      Swal.fire({
+        icon: "success",
+        title: "Theater saved",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      handleReset();
+    } catch (error: any) {
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+      });
+      console.log(error.response.data.message);
+    }
+  };
+
+  const handleUpdateTheater = async () => {
+    const data = {
+      name,
+      location,
+      mobileNumber,
+    };
+
+    try {
+      Swal.fire({
+        title: "Loading...",
+        allowOutsideClick: false,
+        showLoaderOnConfirm: true,
+        showConfirmButton: false,
+      });
+
+      await axios.put(`${theaterEndPoint}/${theater?._id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      Swal.close();
+      Swal.fire({
+        icon: "success",
+        title: "Theater updated",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      handleReset();
+      handleClose();
+    } catch (error: any) {
+      Swal.close();
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+      });
+      console.log(error);
+    }
+  };
 
   const handleReset = () => {
     setTheater(null);
+    setName("");
+    setLocation("");
+    setMobileNumber("");
   };
 
   const handleClose = () => {
     navigate("/my-theaters", {
-      state: { currentPage: location?.state?.currentPage ?? 1 },
+      state: { currentPage: use_location?.state?.currentPage ?? 1 },
     });
   };
 
   return (
     <div className="m-5 flex justify-center relative">
       <form className="flex flex-col justify-center items-center bg-transparent-1 w-[80%] md:w-[70%] lg:w-[50%] p-8 rounded-lg relative">
-        <CloseButton
-          className={
-            "absolute top-[-5px] right-[-5px] hover:w-[30px] hover:right-[-7px] hover:h-[30px] hover:top-[-7px] hover:text-xl"
-          }
-          callBack={handleClose}
-        />
+        <CloseButton callBack={handleClose} />
         <h1 className="text-white mb-2">
           {theater ? "Update" : "Add"} Theater
         </h1>
-
+        <Input
+          type={"text"}
+          name={"name"}
+          placeholder={"name"}
+          label={"Name"}
+          optional={false}
+          value={name}
+          callBack={(e: any) => {
+            setName(e.target.value);
+          }}
+        />
+        <Input
+          type={"text"}
+          name={"location"}
+          placeholder={"location"}
+          label={"Location"}
+          optional={false}
+          value={location}
+          callBack={(e: any) => {
+            setLocation(e.target.value);
+          }}
+        />
+        <Input
+          type={"text"}
+          name={"mobileNumber"}
+          placeholder={"mobile number"}
+          label={"Mobile Number"}
+          optional={false}
+          value={mobileNumber}
+          callBack={(e: any) => {
+            setMobileNumber(e.target.value);
+          }}
+        />
         {theater ? (
           <button
             type="button"

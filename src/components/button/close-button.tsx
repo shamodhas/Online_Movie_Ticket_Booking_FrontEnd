@@ -1,5 +1,5 @@
 type CloseButtonProps = {
-  className: string;
+  className?: string;
   callBack: Function;
 };
 function CloseButton({ className, callBack }: CloseButtonProps) {
@@ -8,7 +8,7 @@ function CloseButton({ className, callBack }: CloseButtonProps) {
       type="button"
       className={
         className +
-        " text-white bg-red-500 w-[25px] h-[25px] rounded-full flex justify-center items-center "
+        " text-white absolute top-[2px] right-[2px] hover:bg-transparent-1 w-[25px] h-[25px] rounded-full flex justify-center items-center "
       }
       onClick={(e) => callBack(e)}
     >
