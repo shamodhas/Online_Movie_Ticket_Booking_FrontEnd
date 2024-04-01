@@ -1,36 +1,36 @@
-import { useEffect, useState } from "react";
-import MainImage from "./../assets/images/home-image.png";
-import MovieCard from "../components/card/movie-card";
-import { Link } from "react-router-dom";
-import RightArrow from "../assets/icons/right-arrow";
-import axios from "axios";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react"
+import MainImage from "./../assets/images/home-image.png"
+import MovieCard from "../components/card/movie-card"
+import { Link } from "react-router-dom"
+import RightArrow from "../assets/icons/right-arrow"
+import axios from "axios"
+import Swal from "sweetalert2"
 
 export default function Home() {
-  const [isAuth] = useState(false);
-  const [movies, setMovies] = useState([]);
+  const [isAuth] = useState(false)
+  const [movies, setMovies] = useState([])
 
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
 
   useEffect(() => {
-    const loadMovies = async () => {
-      try {
-        const response = await axios.get(`${movieEndPoint}/all?size=5&page=1`);
-        setMovies(response.data.data);
-      } catch (err) {
-        Swal.fire({
-          icon: "error",
-          title: "Fail to load movies",
-        });
-        console.log(err);
-      }
-    };
+    loadMovies()
+  }, [])
 
-    loadMovies();
-  }, []);
+  const loadMovies = async () => {
+    try {
+      const response = await axios.get(`${movieEndPoint}/all?size=5&page=1`)
+      setMovies(response.data.data)
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Fail to load movies"
+      })
+      console.log(err)
+    }
+  }
 
   return (
-    <div className="text-white font-bold p-5 mt-12 mx-4">
+    <div className="text-white font-bold p-5 mx-4">
       <div className="flex flex-col lg:flex-row justify-center lg:justify-evenly">
         <div className="flex flex-col justify-center">
           <h1 className="whitespace-nowrap lg:mt-12 text-center lg:text-left font-bold text-4xl lg:text-7xl lg:w-fit">
@@ -59,10 +59,10 @@ export default function Home() {
       </div>
       <div className="flex flex-col mt-2 lg:mt-12 lg:text-white">
         <h1 className="text-md text-gray-500">Latest movies</h1>
-        <div className="grid grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-2">
           {movies?.map((movie: any, index) => {
             if (index > 4) {
-              return;
+              return
             }
             return (
               <MovieCard
@@ -71,7 +71,7 @@ export default function Home() {
                 name={movie.name}
                 language={movie.language}
               />
-            );
+            )
           })}
         </div>
         <Link
@@ -83,5 +83,5 @@ export default function Home() {
         </Link>
       </div>
     </div>
-  );
+  )
 }
