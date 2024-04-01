@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom"
 import MenuBar from "../../assets/icons/menu"
 import UserContext from "../../context/user-context"
 import { UserRoles } from "../../types/user"
+import X from "../../assets/icons/x"
 
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -96,7 +97,11 @@ export default function Header() {
       )}
       <nav className="block lg:hidden">
         <button className="p-2" onClick={toggleMenu}>
-          <MenuBar width={25} height={25} />
+          {isMenuOpen ? (
+            <X width={20} height={20} />
+          ) : (
+            <MenuBar width={25} height={25} />
+          )}
         </button>
       </nav>
     </header>
