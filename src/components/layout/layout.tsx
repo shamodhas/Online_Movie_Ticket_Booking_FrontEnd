@@ -12,7 +12,9 @@ export default function PageLayout(props: PageLayoutProps) {
     <div className="w-[100%] h-[100%]">
       <Background videoSource={VideoSource} />
       <Header />
-      <div className="pt-[50px]">{props.children}</div>
+      <div className="pt-[50px]">
+        <div className="mt-[10px]">{props.children}</div>
+      </div>
       <Footer />
     </div>
   )

@@ -6,7 +6,45 @@ export default function Login() {
 
   useEffect(() => {
     setLogin(window.location.pathname === "/login");
-  }, [window.location.pathname]);
+  }, []);
+
+  
+  const handleSubmit = async () => {
+    if (!email) {
+      notifyWarning("Email cannot be empty!")
+    } else if (!password) {
+      notifyWarning("Password cannot be empty!")
+    } else {
+      dispatch(setLoading(true))
+      await signIn({ email, password })
+        .then((res) => {
+          if (res.success && res.result.token) {
+            const userData = {
+              ...res.result
+            }
+            dispatch(setUserData(userData))
+            Cookies.set(constant.ACCESS_TOKEN, res.result.token)
+            Cookies.set(constant.REFRESH_TOKEN, res.result.token)
+            Cookies.set(constant.USER_DATA, JSON.stringify(userData))
+            localStorage.setItem(constant.USER_DATA, JSON.stringify(userData))
+            if (res.result.isFirstTimeSignIn) {
+              navigate("/on-boarding-questions")
+            } else {
+              navigate("/security")
+            }
+          } else if (res.status === 0) {
+            notifyWarning("Invalid user credentials")
+          } else {
+            notifyError(
+              "Connection refused: Unable to connect to the server. Please check your internet connection or try again later."
+            )
+          }
+        })
+        .finally(() => {
+          dispatch(setLoading(false))
+        })
+    }
+  }
 
   return (
     <div className="bg-gray-200 w-full h-screen flex flex-col items-center justify-center text-center">

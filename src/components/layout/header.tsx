@@ -1,31 +1,42 @@
-import { useContext, useState } from "react"
-import Logo from "./../../../public/logo-white.png"
+import { useContext, useEffect, useState } from "react"
+import Logo from "./../../assets/images/logo-white.png"
 import { Link, useLocation } from "react-router-dom"
 import MenuBar from "../../assets/icons/menu"
 import UserContext from "../../context/user-context"
 import { UserRoles } from "../../types/user"
 import X from "../../assets/icons/x"
+import constant from "../../configs/constant"
 
 export default function Header() {
   const [isMenuOpen, setMenuOpen] = useState(false)
   const [user] = useContext(UserContext)
   const location = useLocation()
-  const guestNavLink = [
-    "about",
-    "movies",
-    "theaters",
-    "my-movies",
-    "my-theaters"
-  ]
-  console.log(location.pathname)
+  const [scrollPosition, setScrollPosition] = useState(window.screenY)
 
+  location.pathname === "/"
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
   }
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const position = window.scrollY
+      setScrollPosition(position)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
   return (
-    <header className="fixed z-50 w-[100%] bg-transparent-1 flex justify-between items-center text-white">
-      <nav>
+    <header
+      className={`fixed z-50 w-[100%] flex justify-between items-center text-white md:pe-5 pe-15 ${
+        scrollPosition > 40 ? "bg-transparent-2" : "bg-transparent-1 "
+      }`}
+    >
+      <nav className="md:ms-5 ms-15">
         <Link to={"/"} className="flex justify-between items-center">
           <img src={Logo} className="w-[50px]" alt="Flowbite Logo" />
           <span className="text-xl lg:text-xl font-semibold whitespace-nowrap">
@@ -52,7 +63,7 @@ export default function Header() {
           >
             Home
           </Link>
-          {guestNavLink.map((link) => {
+          {constant.guestNavLink.map((link: any) => {
             return (
               <Link
                 key={link}

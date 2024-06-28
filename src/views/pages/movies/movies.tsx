@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Swal from "sweetalert2";
-import MovieCard from "../components/card/movie-card";
+import { useEffect, useState } from "react"
+import Swal from "sweetalert2"
+import MovieCard from "../../../components/card/movie-card"
+import apiService from "../../services/apiService"
 
 export default function Movies() {
-  const [movies, setMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
+  const [movies, setMovies] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
 
   useEffect(() => {
-    loadAllMovies(currentPage);
-  }, []);
+    loadAllMovies(currentPage)
+  }, [])
 
   const loadAllMovies = async (page: number) => {
     try {
@@ -19,35 +19,41 @@ export default function Movies() {
         title: "Loading...",
         allowOutsideClick: false,
         didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+          Swal.showLoading()
+        }
+      })
 
-      const response = await axios.get(
-        `${movieEndPoint}/all?size=${5}&page=${page}`
-      );
+      const response = await apiService.get(
+        `${movieEndPoint}/all?size=${5}&page=${page}`,
+        {
+          headers: {
+            verifyAuth: false
+          }
+        }
+      )
 
-      setMovies(response.data.data);
-      setTotalPages(response.data.pageCount);
-      Swal.close();
+      setMovies(response.data.data)
+      setTotalPages(response.data.pageCount)
+      Swal.close()
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Fail to load movies",
-      });
-      console.log(err);
+        title: "Fail to load movies"
+      })
+      console.log(err)
     }
-  };
+    // finaly need new loader
+  }
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    loadAllMovies(currentPage + 1);
-  };
+    setCurrentPage((prevPage) => prevPage + 1)
+    loadAllMovies(currentPage + 1)
+  }
 
   const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    loadAllMovies(currentPage - 1);
-  };
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+    loadAllMovies(currentPage - 1)
+  }
 
   return (
     <>
@@ -60,7 +66,7 @@ export default function Movies() {
               name={movie.name}
               language={movie.language}
             />
-          );
+          )
         })}
       </div>
       <div className="text-white flex justify-center items-center m-5">
@@ -81,5 +87,5 @@ export default function Movies() {
         </button>
       </div>
     </>
-  );
+  )
 }

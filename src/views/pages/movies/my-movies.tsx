@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Swal from "sweetalert2";
-import MovieCard from "../../components/card/movie-card";
-import DeleteIcon from "../../assets/icons/delete";
-import EditIcon from "../../assets/icons/edit";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Movie } from "../../types/movie";
+import { useEffect, useState } from "react"
+import axios from "axios"
+import Swal from "sweetalert2"
+import MovieCard from "../../../components/card/movie-card"
+import DeleteIcon from "../../../assets/icons/delete"
+import EditIcon from "../../../assets/icons/edit"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Movie } from "../../../types/movie"
 
 function MyMovies() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState([])
   const [currentPage, setCurrentPage] = useState<number>(
     location?.state?.currentPage ?? 1
-  );
-  const [totalPages, setTotalPages] = useState(1);
+  )
+  const [totalPages, setTotalPages] = useState(1)
 
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT;
-  const authToken = import.meta.env.VITE_AUTH;
+  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
+  const authToken = import.meta.env.VITE_AUTH
 
   useEffect(() => {
-    loadAllMyMovies(currentPage);
-  }, []);
+    loadAllMyMovies(currentPage)
+  }, [])
 
   const loadAllMyMovies = async (page: number) => {
     try {
@@ -30,19 +30,19 @@ function MyMovies() {
         `${movieEndPoint}/my?size=${5}&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+            Authorization: `Bearer ${authToken}`
+          }
         }
-      );
-      setMovies(response.data.data);
-      setTotalPages(response.data.pageCount);
+      )
+      setMovies(response.data.data)
+      setTotalPages(response.data.pageCount)
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Fail to load movies",
-      });
-      console.log(err);
-      navigate("/login");
+        title: "Fail to load movies"
+      })
+      console.log(err)
+      navigate("/login")
     }
 
     try {
@@ -50,30 +50,30 @@ function MyMovies() {
         title: "Loading...",
         allowOutsideClick: false,
         didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+          Swal.showLoading()
+        }
+      })
 
       const response = await axios.get(
         `${movieEndPoint}/my?size=${5}&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+            Authorization: `Bearer ${authToken}`
+          }
         }
-      );
-      setMovies(response.data.data);
-      setTotalPages(response.data.pageCount);
-      Swal.close();
+      )
+      setMovies(response.data.data)
+      setTotalPages(response.data.pageCount)
+      Swal.close()
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Fail to load movies",
-      });
-      console.log(err);
-      navigate("/login");
+        title: "Fail to load movies"
+      })
+      console.log(err)
+      navigate("/login")
     }
-  };
+  }
 
   const handleDeleteMovie = async (movie: Movie) => {
     try {
@@ -81,55 +81,55 @@ function MyMovies() {
         title: "Loading...",
         allowOutsideClick: false,
         showLoaderOnConfirm: true,
-        showConfirmButton: false,
-      });
+        showConfirmButton: false
+      })
 
       const response = await axios.delete(`${movieEndPoint}/${movie._id}`, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      loadAllMyMovies(currentPage);
-      Swal.close();
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+      loadAllMyMovies(currentPage)
+      Swal.close()
       Swal.fire({
         icon: "success",
         title: "Movie deleted",
         showConfirmButton: false,
-        timer: 1500,
-      });
+        timer: 1500
+      })
 
-      console.log(response.data);
+      console.log(response.data)
     } catch (error: any) {
-      Swal.close();
+      Swal.close()
       Swal.fire({
         icon: "error",
-        title: error.response.data.message,
-      });
-      console.log(error.response.data.message);
+        title: error.response.data.message
+      })
+      console.log(error.response.data.message)
     }
-  };
+  }
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    loadAllMyMovies(currentPage + 1);
-  };
+    setCurrentPage((prevPage) => prevPage + 1)
+    loadAllMyMovies(currentPage + 1)
+  }
 
   const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    loadAllMyMovies(currentPage - 1);
-  };
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+    loadAllMyMovies(currentPage - 1)
+  }
 
   const handleGoAddMovie = () => {
     navigate("/movie-editor", {
-      state: { currentPage },
-    });
-  };
+      state: { currentPage }
+    })
+  }
 
   const handleEditMovie = (movie: any) => {
     navigate("/movie-editor", {
-      state: { movie, currentPage },
-    });
-  };
+      state: { movie, currentPage }
+    })
+  }
 
   return (
     <div>
@@ -153,7 +153,7 @@ function MyMovies() {
               <div className="flex justify-center items-center mt-3 gap-1">
                 <button
                   onClick={() => {
-                    handleDeleteMovie(movie);
+                    handleDeleteMovie(movie)
                   }}
                   className="bg-transparent-1 rounded-xl w-[40px] hover:bg-red-600"
                 >
@@ -161,7 +161,7 @@ function MyMovies() {
                 </button>
                 <button
                   onClick={() => {
-                    handleEditMovie(movie);
+                    handleEditMovie(movie)
                   }}
                   className="bg-transparent-1 rounded-xl w-[40px] h-[40px] hover:bg-yellow-600"
                 >
@@ -169,7 +169,7 @@ function MyMovies() {
                 </button>
               </div>
             </div>
-          );
+          )
         })}
       </div>
       <div className="text-white flex justify-center items-center m-5">
@@ -190,7 +190,7 @@ function MyMovies() {
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default MyMovies;
+export default MyMovies

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import MainImage from "./../assets/images/home-image.png"
-import MovieCard from "../components/card/movie-card"
+import MainImage from "./../../../assets/images/home-image.png"
 import { Link } from "react-router-dom"
-import RightArrow from "../assets/icons/right-arrow"
 import axios from "axios"
 import Swal from "sweetalert2"
+import MovieCard from "../../../components/card/movie-card"
+import RightArrow from "../../../assets/icons/right-arrow"
 
 export default function Home() {
   const [isAuth] = useState(false)

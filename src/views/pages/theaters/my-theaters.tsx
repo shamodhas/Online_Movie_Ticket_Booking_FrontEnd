@@ -1,28 +1,28 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import EditIcon from "../../assets/icons/edit";
-import DeleteIcon from "../../assets/icons/delete";
-import EyeIcon from "../../assets/icons/eye";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
+import EditIcon from "../../../assets/icons/edit"
+import DeleteIcon from "../../../assets/icons/delete"
+import EyeIcon from "../../../assets/icons/eye"
 
 function MyTheaters() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [theaters, setTheaters] = useState([]);
+  const [theaters, setTheaters] = useState([])
   const [currentPage, setCurrentPage] = useState<number>(
     location?.state?.currentPage ?? 1
-  );
-  const [totalPages, setTotalPages] = useState(1);
+  )
+  const [totalPages, setTotalPages] = useState(1)
 
-  const itemsPerPage = 2;
-  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
-  const authToken = import.meta.env.VITE_AUTH;
+  const itemsPerPage = 2
+  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT
+  const authToken = import.meta.env.VITE_AUTH
 
   useEffect(() => {
-    loadAllMyTheaters(currentPage);
-  }, []);
+    loadAllMyTheaters(currentPage)
+  }, [])
 
   const loadAllMyTheaters = async (page: number) => {
     try {
@@ -30,30 +30,30 @@ function MyTheaters() {
         title: "Loading...",
         allowOutsideClick: false,
         didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+          Swal.showLoading()
+        }
+      })
 
       const response = await axios.get(
         `${theaterEndPoint}/my?size=${2}&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+            Authorization: `Bearer ${authToken}`
+          }
         }
-      );
-      Swal.close();
-      setTheaters(response.data.data);
-      setTotalPages(response.data.pageCount);
+      )
+      Swal.close()
+      setTheaters(response.data.data)
+      setTotalPages(response.data.pageCount)
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Failed to load theaters",
-      });
-      console.error(err);
-      navigate("/login");
+        title: "Failed to load theaters"
+      })
+      console.error(err)
+      navigate("/login")
     }
-  };
+  }
 
   const handleDeleteTheater = async (theater: any) => {
     Swal.fire({
@@ -69,60 +69,60 @@ function MyTheaters() {
         try {
           await axios.delete(`${theaterEndPoint}/${theater._id}`, {
             headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          });
+              Authorization: `Bearer ${authToken}`
+            }
+          })
 
-          return "Deleted successfully";
+          return "Deleted successfully"
         } catch (error: any) {
           Swal.showValidationMessage(
             `Request failed: ${error.response.data.message}`
-          );
-          console.error(error);
+          )
+          console.error(error)
         }
       },
-      allowOutsideClick: () => !Swal.isLoading(),
+      allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", result.value, "success");
-        loadAllMyTheaters(currentPage);
+        Swal.fire("Deleted!", result.value, "success")
+        loadAllMyTheaters(currentPage)
       }
-    });
-  };
+    })
+  }
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-    loadAllMyTheaters(currentPage + 1);
-  };
+    setCurrentPage((prevPage) => prevPage + 1)
+    loadAllMyTheaters(currentPage + 1)
+  }
 
   const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    loadAllMyTheaters(currentPage - 1);
-  };
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
+    loadAllMyTheaters(currentPage - 1)
+  }
 
   const handleGoAddTheater = () => {
     navigate("/theater-editor", {
-      state: { currentPage },
-    });
-  };
+      state: { currentPage }
+    })
+  }
 
   const handleGoAddHalls = () => {
     navigate("/theater-halls", {
-      state: { currentPage },
-    });
-  };
+      state: { currentPage }
+    })
+  }
 
   const handleEditTheater = (theater: any) => {
     navigate("/theater-editor", {
-      state: { theater, currentPage },
-    });
-  };
+      state: { theater, currentPage }
+    })
+  }
 
   const handleViewHalls = (theater: any) => {
     navigate("/theater-halls", {
-      state: { theater, currentPage },
-    });
-  };
+      state: { theater, currentPage }
+    })
+  }
 
   return (
     <div className="w-full h-full ">
@@ -155,7 +155,7 @@ function MyTheaters() {
           </thead>
           <tbody className="text-white">
             {theaters?.map((theater: any, index) => {
-              const id = (currentPage - 1) * itemsPerPage + index + 1;
+              const id = (currentPage - 1) * itemsPerPage + index + 1
 
               return (
                 <tr
@@ -171,7 +171,7 @@ function MyTheaters() {
                       <button
                         className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-yellow-600 p-2"
                         onClick={() => {
-                          handleEditTheater(theater);
+                          handleEditTheater(theater)
                         }}
                       >
                         <EditIcon color="white" />
@@ -183,7 +183,7 @@ function MyTheaters() {
                       <button
                         className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-red-600 p-2"
                         onClick={() => {
-                          handleDeleteTheater(theater);
+                          handleDeleteTheater(theater)
                         }}
                       >
                         <DeleteIcon color="white" />
@@ -195,7 +195,7 @@ function MyTheaters() {
                       <button
                         className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-blue-600 p-2"
                         onClick={() => {
-                          handleViewHalls(theater);
+                          handleViewHalls(theater)
                         }}
                       >
                         <EyeIcon color="white" />
@@ -203,7 +203,7 @@ function MyTheaters() {
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
           </tbody>
         </table>
@@ -226,7 +226,7 @@ function MyTheaters() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default MyTheaters;
+export default MyTheaters

@@ -7,7 +7,7 @@ export default function Background({videoSource}:BackgroundProps) {
   return (
     <div>
       <video
-        className="absolute w-[100%] h-[100%] object-cover z-[-2]"
+        className="fixed w-[100%] h-[100%] object-cover z-[-10]"
         autoPlay
         loop
         muted
@@ -17,7 +17,7 @@ export default function Background({videoSource}:BackgroundProps) {
         <source src={videoSource} type="video/ogg" />
         not support Video
       </video>
-      <div className="absolute w-[100%] h-[100%] bg-black z-[-1] opacity-[.5]"></div>
+      <div className="fixed w-[100%] h-[100%] bg-black z-[-1] opacity-[.5]"></div>
     </div>
-  );
+  )
 }

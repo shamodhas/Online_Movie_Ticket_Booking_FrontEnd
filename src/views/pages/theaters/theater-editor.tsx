@@ -1,120 +1,120 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Theater } from "../../types/theater";
-import CloseButton from "../../components/button/close-button";
-import Input from "../../components/input/input";
-import Swal from "sweetalert2";
-import axios from "axios";
+import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Theater } from "../../../types/theater"
+import CloseButton from "../../../components/button/close-button"
+import Input from "../../../components/input/input"
+import Swal from "sweetalert2"
+import axios from "axios"
 
 function TheaterEditor() {
-  const use_location = useLocation();
-  const navigate = useNavigate();
+  const use_location = useLocation()
+  const navigate = useNavigate()
 
   const [theater, setTheater] = useState<Theater | null>(
     use_location?.state?.theater ?? null
-  );
-  const [name, setName] = useState(theater?.name ? theater.name : "");
+  )
+  const [name, setName] = useState(theater?.name ? theater.name : "")
   const [location, setLocation] = useState(
     theater?.location ? theater.location : ""
-  );
+  )
   const [mobileNumber, setMobileNumber] = useState(
     theater?.mobileNumber ? theater?.mobileNumber : ""
-  );
+  )
 
-  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
-  const authToken = import.meta.env.VITE_AUTH;
+  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT
+  const authToken = import.meta.env.VITE_AUTH
 
   const handleSaveTheater = async () => {
     const data = {
       name,
       location,
-      mobileNumber,
-    };
+      mobileNumber
+    }
 
     try {
       Swal.fire({
         title: "Loading...",
         allowOutsideClick: false,
-        showConfirmButton: false,
-      });
+        showConfirmButton: false
+      })
 
       await axios.post(theaterEndPoint, data, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+          Authorization: `Bearer ${authToken}`
+        }
+      })
 
-      Swal.close();
+      Swal.close()
       Swal.fire({
         icon: "success",
         title: "Theater saved",
         showConfirmButton: false,
-        timer: 1500,
-      });
-      handleReset();
+        timer: 1500
+      })
+      handleReset()
     } catch (error: any) {
-      Swal.close();
+      Swal.close()
       Swal.fire({
         icon: "error",
-        title: error.response.data.message,
-      });
-      console.log(error.response.data.message);
+        title: error.response.data.message
+      })
+      console.log(error.response.data.message)
     }
-  };
+  }
 
   const handleUpdateTheater = async () => {
     const data = {
       name,
       location,
-      mobileNumber,
-    };
+      mobileNumber
+    }
 
     try {
       Swal.fire({
         title: "Loading...",
         allowOutsideClick: false,
-        showConfirmButton: false,
-      });
+        showConfirmButton: false
+      })
 
       await axios.put(`${theaterEndPoint}/${theater?._id}`, data, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+          Authorization: `Bearer ${authToken}`
+        }
+      })
 
-      Swal.close();
+      Swal.close()
       Swal.fire({
         icon: "success",
         title: "Theater updated",
         showConfirmButton: false,
-        timer: 1500,
-      });
-      handleReset();
-      handleClose();
+        timer: 1500
+      })
+      handleReset()
+      handleClose()
     } catch (error: any) {
-      Swal.close();
+      Swal.close()
       Swal.fire({
         icon: "error",
-        title: error.response.data.message,
-      });
-      console.log(error);
+        title: error.response.data.message
+      })
+      console.log(error)
     }
-  };
+  }
 
   const handleReset = () => {
-    setTheater(null);
-    setName("");
-    setLocation("");
-    setMobileNumber("");
-  };
+    setTheater(null)
+    setName("")
+    setLocation("")
+    setMobileNumber("")
+  }
 
   const handleClose = () => {
     navigate("/my-theaters", {
-      state: { currentPage: use_location?.state?.currentPage ?? 1 },
-    });
-  };
+      state: { currentPage: use_location?.state?.currentPage ?? 1 }
+    })
+  }
 
   return (
     <div className="m-5 flex justify-center relative">
@@ -131,7 +131,7 @@ function TheaterEditor() {
           optional={false}
           value={name}
           callBack={(e: any) => {
-            setName(e.target.value);
+            setName(e.target.value)
           }}
         />
         <Input
@@ -142,7 +142,7 @@ function TheaterEditor() {
           optional={false}
           value={location}
           callBack={(e: any) => {
-            setLocation(e.target.value);
+            setLocation(e.target.value)
           }}
         />
         <Input
@@ -153,7 +153,7 @@ function TheaterEditor() {
           optional={false}
           value={mobileNumber}
           callBack={(e: any) => {
-            setMobileNumber(e.target.value);
+            setMobileNumber(e.target.value)
           }}
         />
         {theater ? (
@@ -182,7 +182,7 @@ function TheaterEditor() {
         </button>
       </form>
     </div>
-  );
+  )
 }
 
-export default TheaterEditor;
+export default TheaterEditor

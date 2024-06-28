@@ -1,53 +1,36 @@
-import { Outlet, Route, Routes } from "react-router-dom"
 import "./App.css"
-import PageLayout from "./components/layout/layout"
-import Home from "./pages/home"
-import About from "./pages/about"
-import Movies from "./pages/movies"
-import Theaters from "./pages/theaters"
-import Login from "./pages/login"
 import { useState } from "react"
 import { User, UserRoles } from "./types/user"
 import UserContext from "./context/user-context"
-import MovieEditor from "./pages/movies/movie-editor"
-import MyMovies from "./pages/movies/my-movies"
-import MyTheaters from "./pages/theaters/my-theaters"
-import TheaterEditor from "./pages/theaters/theater-editor"
-import Halls from "./pages/theaters/halls"
+import { ToastContainer } from "react-toastify"
+import Router from "./router/Router"
+import LoadingContext from "./context/loading-context"
+import Loader from "./components/Loader"
 
 function App(): JSX.Element {
-  const [user, setUser] = useState<User>({ role: UserRoles.GUEST })
+  const [user, setUser] = useState<User>({ role: UserRoles.THEATER_EMPLOYEE })
+  const [loading, setLoading] = useState(false)
 
   return (
     <UserContext.Provider value={[user, setUser]}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <PageLayout>
-              <Outlet />
-            </PageLayout>
-          }
-        >
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="movies" element={<Movies />} />
-          <Route path="theaters" element={<Theaters />} />
-          {!(
-            user.role === UserRoles.GUEST || user.role === UserRoles.CUSTOMER
-          ) && (
-            <Route path="/" element={<Outlet />}>
-              <Route path="movie-editor" element={<MovieEditor />} />
-              <Route path="theater-editor" element={<TheaterEditor />} />
-              <Route path="my-movies" element={<MyMovies />} />
-              <Route path="my-theaters" element={<MyTheaters />} />
-              <Route path="theater-halls" element={<Halls />} />
-            </Route>
-          )}
-        </Route>
-      </Routes>
+      <LoadingContext.Provider value={[loading, setLoading]}>
+        <div>
+          <Loader />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+
+          <Router />
+        </div>
+      </LoadingContext.Provider>
     </UserContext.Provider>
   )
 }

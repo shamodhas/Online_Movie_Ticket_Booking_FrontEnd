@@ -1,35 +1,35 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import { Theater } from "../../types/theater";
-import { Hall } from "../../types/hall";
-import EditIcon from "../../assets/icons/edit";
-import DeleteIcon from "../../assets/icons/delete";
-import Input from "../../components/input/input";
-import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import Swal from "sweetalert2"
+import { Theater } from "../../../types/theater"
+import { Hall } from "../../../types/hall"
+import EditIcon from "../../../assets/icons/edit"
+import DeleteIcon from "../../../assets/icons/delete"
+import Input from "../../../components/input/input"
+import { useLocation, useNavigate } from "react-router-dom"
 
 function Halls() {
-  const navigate = useNavigate();
-  const use_location = useLocation();
+  const navigate = useNavigate()
+  const use_location = useLocation()
 
-  const [theaters, setTheaters] = useState([]);
+  const [theaters, setTheaters] = useState([])
   const [selectedTheater, setSelectedTheater] = useState<
     Theater | null | undefined
-  >(use_location.state.theater);
-  const [hall, setHall] = useState<Hall | null | undefined>(null);
-  const [halls, setHalls] = useState([]);
-  const [hallNumber, setHallNumber] = useState("");
+  >(use_location.state.theater)
+  const [hall, setHall] = useState<Hall | null | undefined>(null)
+  const [halls, setHalls] = useState([])
+  const [hallNumber, setHallNumber] = useState("")
 
-  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
-  const hallEndPoint = import.meta.env.VITE_HALL_END_POINT;
-  const authToken = import.meta.env.VITE_AUTH;
+  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT
+  const hallEndPoint = import.meta.env.VITE_HALL_END_POINT
+  const authToken = import.meta.env.VITE_AUTH
 
   useEffect(() => {
-    loadMyAllTheaters();
+    loadMyAllTheaters()
     if (selectedTheater) {
-      loadHalls(selectedTheater._id ?? "");
+      loadHalls(selectedTheater._id ?? "")
     }
-  }, []);
+  }, [])
 
   const loadMyAllTheaters = async () => {
     try {
@@ -37,41 +37,41 @@ function Halls() {
         title: "Loading...",
         allowOutsideClick: false,
         didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+          Swal.showLoading()
+        }
+      })
 
       const response = await axios.get(`${theaterEndPoint}/my`, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      Swal.close();
-      setTheaters(response.data.data);
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+      Swal.close()
+      setTheaters(response.data.data)
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Failed to load theaters",
-      });
-      console.error(err);
+        title: "Failed to load theaters"
+      })
+      console.error(err)
     }
-  };
+  }
 
   const handleTheaterChange = (event: any) => {
-    const selectedTheaterId = event.target.value;
+    const selectedTheaterId = event.target.value
 
     const theater: Theater | null | undefined = theaters.find(
       (theater: Theater) => theater._id === selectedTheaterId
-    );
-    setSelectedTheater(theater);
-    handleReset();
+    )
+    setSelectedTheater(theater)
+    handleReset()
 
     if (theater) {
-      loadHalls(selectedTheaterId);
+      loadHalls(selectedTheaterId)
     } else {
-      setHalls([]);
+      setHalls([])
     }
-  };
+  }
 
   const loadHalls = async (theaterId: string) => {
     try {
@@ -79,106 +79,106 @@ function Halls() {
         title: "Loading...",
         allowOutsideClick: false,
         didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+          Swal.showLoading()
+        }
+      })
 
       const response = await axios.get(`${hallEndPoint}/theater/${theaterId}`, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-      Swal.close();
-      setHalls(response.data.data);
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+      Swal.close()
+      setHalls(response.data.data)
     } catch (err) {
       Swal.fire({
         icon: "error",
-        title: "Failed to load halls",
-      });
-      console.error(err);
+        title: "Failed to load halls"
+      })
+      console.error(err)
     }
-  };
+  }
 
   const handleSaveHall = async () => {
     if (selectedTheater && selectedTheater._id) {
       const data = {
         hallNumber,
-        theater: selectedTheater._id,
-      };
+        theater: selectedTheater._id
+      }
 
       try {
         Swal.fire({
           title: "Loading...",
           allowOutsideClick: false,
-          showConfirmButton: false,
-        });
+          showConfirmButton: false
+        })
 
         await axios.post(hallEndPoint, data, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+            Authorization: `Bearer ${authToken}`
+          }
+        })
 
-        Swal.close();
+        Swal.close()
         Swal.fire({
           icon: "success",
           title: "Hall saved",
           showConfirmButton: false,
-          timer: 1500,
-        });
-        loadHalls(selectedTheater._id);
-        handleReset();
+          timer: 1500
+        })
+        loadHalls(selectedTheater._id)
+        handleReset()
       } catch (error: any) {
-        Swal.close();
+        Swal.close()
         Swal.fire({
           icon: "error",
-          title: error.response.data.message,
-        });
-        console.log(error.response.data.message);
+          title: error.response.data.message
+        })
+        console.log(error.response.data.message)
       }
     }
-  };
+  }
 
   const handleUpdateHall = async () => {
     if (selectedTheater && selectedTheater._id && hall && hall._id) {
       const data = {
-        hallNumber,
-      };
+        hallNumber
+      }
 
       try {
         Swal.fire({
           title: "Loading...",
           allowOutsideClick: false,
-          showConfirmButton: false,
-        });
+          showConfirmButton: false
+        })
 
         await axios.put(`${hallEndPoint}/${hall._id}`, data, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+            Authorization: `Bearer ${authToken}`
+          }
+        })
 
-        Swal.close();
+        Swal.close()
         Swal.fire({
           icon: "success",
           title: "Hall updated",
           showConfirmButton: false,
-          timer: 1500,
-        });
-        loadHalls(selectedTheater._id);
-        handleReset();
+          timer: 1500
+        })
+        loadHalls(selectedTheater._id)
+        handleReset()
       } catch (error: any) {
-        Swal.close();
+        Swal.close()
         Swal.fire({
           icon: "error",
-          title: error.response.data.message,
-        });
-        console.log(error);
+          title: error.response.data.message
+        })
+        console.log(error)
       }
     }
-  };
+  }
 
   const handleDeleteHall = (hallId: string) => {
     Swal.fire({
@@ -194,37 +194,37 @@ function Halls() {
         try {
           await axios.delete(`${hallEndPoint}/${hallId}`, {
             headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          });
+              Authorization: `Bearer ${authToken}`
+            }
+          })
 
-          return "Deleted successfully";
+          return "Deleted successfully"
         } catch (error: any) {
           Swal.showValidationMessage(
             `Request failed: ${error.response.data.message}`
-          );
-          console.error(error);
+          )
+          console.error(error)
         }
       },
-      allowOutsideClick: () => !Swal.isLoading(),
+      allowOutsideClick: () => !Swal.isLoading()
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", result.value, "success");
-        loadHalls(selectedTheater?._id || "");
-        handleReset();
+        Swal.fire("Deleted!", result.value, "success")
+        loadHalls(selectedTheater?._id || "")
+        handleReset()
       }
-    });
-  };
+    })
+  }
 
   const handleEditHall = (hall: Hall) => {
-    setHall(hall);
-    setHallNumber(hall.hallNumber);
-  };
+    setHall(hall)
+    setHallNumber(hall.hallNumber)
+  }
 
   const handleReset = () => {
-    setHall(null);
-    setHallNumber("");
-  };
+    setHall(null)
+    setHallNumber("")
+  }
 
   return (
     <div>
@@ -232,8 +232,8 @@ function Halls() {
         <button
           onClick={() => {
             navigate("/my-theaters", {
-              state: { currentPage: use_location?.state?.currentPage ?? 1 },
-            });
+              state: { currentPage: use_location?.state?.currentPage ?? 1 }
+            })
           }}
           className="bg-transparent-1 font-bold text-xl py-1 px-5 w-fit hover:text-black hover:bg-white whitespace-nowrap"
         >
@@ -259,7 +259,7 @@ function Halls() {
                 <option key={index} value={theater._id}>
                   {theater.name + " - " + theater.location}
                 </option>
-              );
+              )
             })}
           </select>
           <div className="mt-5 flex flex-col justify-center text-center w-full text-white">
@@ -288,7 +288,7 @@ function Halls() {
                 value={hallNumber}
                 optional={false}
                 callBack={(e: any) => {
-                  setHallNumber(e.target.value);
+                  setHallNumber(e.target.value)
                 }}
               />
               {hall ? (
@@ -346,7 +346,7 @@ function Halls() {
                         <button
                           className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-yellow-600 p-2"
                           onClick={() => {
-                            handleEditHall(hall);
+                            handleEditHall(hall)
                           }}
                         >
                           <EditIcon color="white" />
@@ -357,7 +357,7 @@ function Halls() {
                       <div className="flex justify-center">
                         <button
                           onClick={() => {
-                            handleDeleteHall(hall._id ?? "");
+                            handleDeleteHall(hall._id ?? "")
                           }}
                           className="bg-transparent-1 rounded-xl w-[35px] h-[35px] hover:bg-red-600 p-2"
                         >
@@ -366,14 +366,14 @@ function Halls() {
                       </div>
                     </td>
                   </tr>
-                );
+                )
               })}
             </tbody>
           </table>
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default Halls;
+export default Halls
