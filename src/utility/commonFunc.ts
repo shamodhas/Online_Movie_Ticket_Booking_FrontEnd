@@ -1,21 +1,19 @@
 import toastr from "toastr"
-import Cookies from "js-cookie"
-import * as constant from "../configs/constant"
 import Swal from "sweetalert2"
 
-enum MessageType {
+export enum MessageType {
   Warning = "warning",
   Error = "error",
   Success = "success",
   Info = "info"
 }
 
-const notifyMessage = (
+export const notifyMessage = (
   msg: string,
   title: string,
   type: MessageType,
-  place: string,
-  duration: number
+  place?: string,
+  duration?: number
 ) => {
   toastr.options = {
     closeButton: true,

@@ -14,7 +14,6 @@ function Layout({ children, routes }: LayoutPropsType) {
       "/" + route.path === location.pathname || location.pathname === "/"
   )
   const isBlankLayout: boolean = currentRoute?.blankLayout || !currentRoute
-  console.log(isBlankLayout, currentRoute, location.pathname)
 
   return (
     <div className="main_layout_wrapper">

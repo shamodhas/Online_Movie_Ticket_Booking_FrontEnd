@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import MainImage from "./../../../assets/images/home-image.png"
 import { Link } from "react-router-dom"
-import axios from "axios"
-import Swal from "sweetalert2"
 import MovieCard from "../../../components/card/movie-card"
 import RightArrow from "../../../assets/icons/right-arrow"
+import { getAllMovies } from "../../../services/movie"
+import LoadingContext from "../../../context/loading-context"
+import { toast } from "react-toastify"
 
 export default function Home() {
+  const [, setLoading] = useContext(LoadingContext)
   const [isAuth] = useState(false)
   const [movies, setMovies] = useState([])
 
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
-
   useEffect(() => {
-    loadMovies()
+    console.log("useEffect called")
+    getDataHandler()
   }, [])
 
-  const loadMovies = async () => {
-    try {
-      const response = await axios.get(`${movieEndPoint}/all?size=5&page=1`)
-      setMovies(response.data.data)
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Fail to load movies"
+  const getDataHandler = async () => {
+    setLoading(true)
+    await getAllMovies(1, 5)
+      .then((res) => {
+        if (res.success) {
+          setMovies(res.data ?? [])
+        } else {
+          toast.error("Fail to load movies")
+        }
       })
-      console.log(err)
-    }
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   return (
@@ -74,13 +77,15 @@ export default function Home() {
             )
           })}
         </div>
-        <Link
-          to={"/movies"}
-          className="whitespace-nowrap self-center mt-4 text-gray-500 border border-gray-500 py-2 px-4 rounded-xl inline-flex items-center hover:bg-black hover:text-white"
-        >
-          View More
-          <RightArrow />
-        </Link>
+        {(movies && movies.length) > 0 ? (
+          <Link
+            to={"/movies"}
+            className="whitespace-nowrap self-center mt-4 text-gray-500 border border-gray-500 py-2 px-4 rounded-xl inline-flex items-center hover:bg-black hover:text-white"
+          >
+            View More
+            <RightArrow />
+          </Link>
+        ) : null}
       </div>
     </div>
   )
