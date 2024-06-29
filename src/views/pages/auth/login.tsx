@@ -1,8 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {ChangeEvent} from "react";
 import constant from "../../../configs/constant";
 
 export default function Login() {
+  const [selectedImage, setSelectedImage] = useState<string>('');
+
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const result = e.target?.result;
+                if (result && typeof result === 'string') {
+                    setSelectedImage(result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+  const [isHide, setIsHide] = useState(true);
+
   const [isLogin, setLogin] = useState<boolean>(false);
 
   useEffect(() => {
@@ -48,13 +68,75 @@ export default function Login() {
 
   return (
     <div className="bg-gray-200 w-full h-screen flex flex-col items-center justify-center text-center">
-      {isLogin ? "login" : "reg"}
+      {/*{isLogin ? "login" : "reg"}*/}
       <div
         className={`flex bg-white rounded-2xl shadow-2xl w-2/3 max-w-4xl ${
           isLogin ? "flex-row" : "flex-row-reverse"
         }`}
       >
-        <div className="w-3/5 p-5">left</div>
+        <div className="w-3/5 p-5">
+        {isLogin ? (
+          <h1 className="text-center text-black mt-20 text-4xl mb-4">
+              Login
+          </h1>
+        ) : (
+          <h1 className="text-center text-black mt-10 text-4xl mb-4">
+              Register
+          </h1>
+        )}
+        {isLogin ? (
+          <form className="max-w-xs mx-auto mt-10">
+              <input type="email" name="email" placeholder="Enter your email"/>
+              <input type={isHide ? 'password' : 'text'} name="password" placeholder="Enter your password"/>
+              <div className="flex gap-5">
+                  <input className="w-10" type="checkbox" checked={!isHide} onChange={() => setIsHide(!isHide)}/>
+                  <label>Show password</label>
+              </div>
+              <button type="button" className="bg-black h-10 mt-5 text-white hover:bg-primary-400">Login</button>
+          </form>
+        ) : (
+          <form className="block max-w-xs mx-auto">
+                    {selectedImage && (
+                        <div className="flex items-center justify-center m-4">
+                            <img
+                                src={selectedImage}
+                                alt="Selected image"
+                                className="rounded-full w-64 h-64 object-cover"
+                            />
+                        </div>
+                    )}
+                    <input
+                        type="text"
+                        placeholder="Enter your first name"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Enter your last name"
+                    />
+                    <input
+                        type="email"
+                        placeholder="Enter your email"
+                    />
+                    <input
+                        type="email"
+                        placeholder="Enter your phone number"
+                    />
+                    <input
+                        type="password"
+                        placeholder="Enter your password"
+                    />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+                    <button type="button" className="bg-black h-10 text-center text-white hover:bg-gray-800">
+                        Register
+                    </button>
+                </form>
+        )}
+        </div>
+        
         <div
           className={`w-2/5 bg-black text-white py-36 px-12 ${
             isLogin
