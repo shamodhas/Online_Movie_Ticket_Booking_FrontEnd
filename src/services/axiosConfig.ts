@@ -25,7 +25,7 @@ instance.interceptors.response.use(
       }
       isRefresh = true
 
-      const URL = `${apiConfig.serverUrl}/${apiConfig.basePath}/auth/refresh-token`
+      const URL = `${apiConfig.serverUrl}/api/auth/refresh-token`
 
       const config = {
         headers: {

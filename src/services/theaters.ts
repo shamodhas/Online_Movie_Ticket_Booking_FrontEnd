@@ -7,26 +7,26 @@ interface ApiObject {
   body?: any
 }
 
-export async function getAllMovies(page: number, size: number) {
+export async function getAllTheaters(page: number, size: number) {
   const apiObject: ApiObject = {}
   apiObject.method = "GET"
   apiObject.authentication = false
-  apiObject.endpoint = `api/movies?size=${size}&page=${page}`
+  apiObject.endpoint = `api/theaters?size=${size}&page=${page}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }
 
-export async function getMovieById(theaterId: string): Promise<any> {
+export async function getTheaterById(theaterId: string): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "GET"
   apiObject.authentication = false
-  apiObject.endpoint = `api/movies/${theaterId}`
+  apiObject.endpoint = `api/theaters/${theaterId}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function createMovie(movieData: {
+export async function createTheater(theaterData: {
   title: string
   description: string
   releaseDate: Date
@@ -36,15 +36,16 @@ export async function createMovie(movieData: {
   const apiObject: ApiObject = {}
   apiObject.method = "POST"
   apiObject.authentication = true
-  apiObject.endpoint = `api/movies`
-  apiObject.body = movieData
+  apiObject.endpoint = `api/theaters`
+  apiObject.body = theaterData
+
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function updateMovie(
-  movieId: string,
-  movieData: {
+export async function updateTheater(
+  theaterId: string,
+  theaterData: {
     title?: string
     description?: string
     releaseDate?: Date
@@ -55,18 +56,18 @@ export async function updateMovie(
   const apiObject: ApiObject = {}
   apiObject.method = "PUT"
   apiObject.authentication = true
-  apiObject.endpoint = `api/movies/${movieId}`
-  apiObject.body = movieData
+  apiObject.endpoint = `api/theaters/${theaterId}`
+  apiObject.body = theaterData
 
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function deleteMovie(movieId: string): Promise<any> {
+export async function deleteTheater(theaterId: string): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "DELETE"
-  apiObject.authentication = false
-  apiObject.endpoint = `api/movies/${movieId}`
+  apiObject.authentication = true
+  apiObject.endpoint = `api/theaters/${theaterId}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }

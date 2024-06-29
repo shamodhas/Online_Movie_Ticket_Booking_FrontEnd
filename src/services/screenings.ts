@@ -7,26 +7,26 @@ interface ApiObject {
   body?: any
 }
 
-export async function getAllMovies(page: number, size: number) {
+export async function getAllScreenings(page: number, size: number) {
   const apiObject: ApiObject = {}
   apiObject.method = "GET"
   apiObject.authentication = false
-  apiObject.endpoint = `api/movies?size=${size}&page=${page}`
+  apiObject.endpoint = `api/screenings?size=${size}&page=${page}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }
 
-export async function getMovieById(theaterId: string): Promise<any> {
+export async function getScreeningById(screeningId: string): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "GET"
   apiObject.authentication = false
-  apiObject.endpoint = `api/movies/${theaterId}`
+  apiObject.endpoint = `api/screenings/${screeningId}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function createMovie(movieData: {
+export async function createScreening(screeningData: {
   title: string
   description: string
   releaseDate: Date
@@ -36,15 +36,16 @@ export async function createMovie(movieData: {
   const apiObject: ApiObject = {}
   apiObject.method = "POST"
   apiObject.authentication = true
-  apiObject.endpoint = `api/movies`
-  apiObject.body = movieData
+  apiObject.endpoint = `api/screenings`
+  apiObject.body = screeningData
+
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function updateMovie(
-  movieId: string,
-  movieData: {
+export async function updateScreening(
+  screeningId: string,
+  screeningData: {
     title?: string
     description?: string
     releaseDate?: Date
@@ -55,18 +56,18 @@ export async function updateMovie(
   const apiObject: ApiObject = {}
   apiObject.method = "PUT"
   apiObject.authentication = true
-  apiObject.endpoint = `api/movies/${movieId}`
-  apiObject.body = movieData
+  apiObject.endpoint = `api/screenings/${screeningId}`
+  apiObject.body = screeningData
 
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function deleteMovie(movieId: string): Promise<any> {
+export async function deleteScreening(screeningId: string): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "DELETE"
-  apiObject.authentication = false
-  apiObject.endpoint = `api/movies/${movieId}`
+  apiObject.authentication = true
+  apiObject.endpoint = `api/screenings/${screeningId}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }
