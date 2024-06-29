@@ -14,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     console.log("useEffect called")
-    getDataHandler()
+    //getDataHandler()
   }, [])
 
   const getDataHandler = async () => {
