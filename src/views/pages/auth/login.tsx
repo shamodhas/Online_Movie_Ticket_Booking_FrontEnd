@@ -5,6 +5,7 @@ import constant from "../../../configs/constant"
 import { MessageType, notifyMessage } from "../../../utility/commonFunc"
 import LoadingContext from "../../../context/loading-context"
 import { login } from "../../../services/auth"
+import UserContext from "../../../context/user-context"
 
 const handleImageChange = (
   event: ChangeEvent<HTMLInputElement>,
@@ -29,6 +30,7 @@ export default function Login() {
   const [selectedImage, setSelectedImage] = useState<string>("")
 
   const [, setLoading] = useContext(LoadingContext)
+  const [user, setUser] = useContext(UserContext)
 
   const [isHide, setIsHide] = useState(true)
   const [isLogin, setLogin] = useState<boolean>(false)
@@ -51,11 +53,15 @@ export default function Login() {
       setLoading(true)
       await login({ username, password })
         .then((res) => {
-          if (res.success && res.result.token) {
-            const userData: {} = {
-              ...res.result
+          if (res.success && res.data.token) {
+            const userData = {
+              name: res.data.name,
+              email: res.data.email,
+              status: res.data.status,
+              role: res.data.role
             }
-            localStorage.setItem(constant.ACCESS_TOKEN, res.result.token)
+            setUser(userData)
+            localStorage.setItem(constant.ACCESS_TOKEN, res.data.token)
             localStorage.setItem(constant.USER_DETAIL, JSON.stringify(userData))
             localStorage.setItem(constant.USER_DETAIL, JSON.stringify(userData))
             navigate("/")
@@ -95,7 +101,7 @@ export default function Login() {
           {isLogin ? (
             <form className="max-w-xs mx-auto mt-10">
               <input
-                type="username"
+                type="text"
                 name="username"
                 placeholder="Enter your username"
                 value={username}

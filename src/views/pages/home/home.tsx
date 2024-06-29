@@ -13,7 +13,7 @@ export default function Home() {
   const [movies, setMovies] = useState([])
 
   useEffect(() => {
-    //getDataHandler()
+    getDataHandler()
   }, [])
 
   const getDataHandler = async () => {

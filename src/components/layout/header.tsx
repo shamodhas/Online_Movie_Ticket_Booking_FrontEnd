@@ -3,7 +3,7 @@ import Logo from "./../../assets/images/logo-white.png"
 import { Link, useLocation } from "react-router-dom"
 import MenuBar from "../../assets/icons/menu"
 import UserContext from "../../context/user-context"
-import { UserRoles } from "../../types/user"
+import { GUEST } from "../../types/user"
 import X from "../../assets/icons/x"
 import constant from "../../configs/constant"
 
@@ -13,7 +13,7 @@ export default function Header() {
   const location = useLocation()
   const [scrollPosition, setScrollPosition] = useState(window.screenY)
 
-  location.pathname === "/"
+  // location.pathname === "/"
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen)
   }
@@ -81,7 +81,7 @@ export default function Header() {
           })}
         </div>
       </nav>
-      {user.role === UserRoles.GUEST ? (
+      {user.role === GUEST ? (
         <nav className="flex items-center ">
           <Link
             to={"/login"}

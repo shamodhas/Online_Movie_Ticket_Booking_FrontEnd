@@ -1,5 +1,5 @@
-export const ACCESS_TOKEN = "quick-team-admin-access"
-export const USER_DETAIL = "quick-team-admin-user-details"
+export const ACCESS_TOKEN = "quick-team-access"
+export const USER_DETAIL = "quick-team-user-details"
 export const guestNavLink = [
   "about",
   "movies",

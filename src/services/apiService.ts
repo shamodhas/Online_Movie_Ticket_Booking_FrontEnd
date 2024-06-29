@@ -65,7 +65,7 @@ async function callApi(apiObject: any) {
             "Session expired",
             CommoNFunc.SwalIconType.Error
           )
-          window.location.replace("/new-page")
+          window.location.replace("/login")
         }
         result = {
           success: false,
