@@ -7,21 +7,24 @@ export default function Register() {
 
   const handleSubmit = async () => {
     if (!fName) {
-      notifyWarning("First Name cannot be empty!")
+      notifyMessage(MessageType.Warning, "First Name cannot be empty!")
     } else if (!lName) {
-      notifyWarning("Last Name cannot be empty!")
+      notifyMessage(MessageType.Warning, "Last Name cannot be empty!")
     } else if (!email) {
-      notifyWarning("Email cannot be empty!")
+      notifyMessage(MessageType.Warning, "Email cannot be empty!")
     } else if (!phone) {
-      notifyWarning("Contact Number cannot be empty!")
+      notifyMessage(MessageType.Warning, "Contact Number cannot be empty!")
     } else if (!password) {
-      notifyWarning("Password cannot be empty!")
+      notifyMessage(MessageType.Warning, "Password cannot be empty!")
     } else if (!cPassword) {
-      notifyWarning("Confirm Password cannot be empty!")
+      notifyMessage(MessageType.Warning, "Confirm Password cannot be empty!")
     } else if (password === !cPassword) {
-      notifyWarning("Passwords do not match!")
+      notifyMessage(MessageType.Warning, "Passwords do not match!")
     } else if (!isAgree) {
-      notifyWarning("Please agree to the terms and conditions to proceed.")
+      notifyMessage(
+        MessageType.Warning,
+        "Please agree to the terms and conditions to proceed."
+      )
     } else {
       setLoading(true)
       await createNewUser({
@@ -43,7 +46,7 @@ export default function Register() {
             setAgree(false)
             navigate("/login")
           } else if (res.status === 0) {
-            notifyWarning("Invalid user data")
+            notifyMessage(MessageType.Warning, "Invalid user data")
           } else {
             notifyError(
               "Connection refused: Unable to connect to the server. Please check your internet connection or try again later."

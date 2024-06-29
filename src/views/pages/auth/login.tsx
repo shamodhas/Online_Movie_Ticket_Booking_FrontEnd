@@ -57,10 +57,7 @@ export default function Login() {
             }
             localStorage.setItem(constant.ACCESS_TOKEN, res.result.token)
             localStorage.setItem(constant.USER_DETAIL, JSON.stringify(userData))
-            localStorage.setItemItem(
-              constant.USER_DETAIL,
-              JSON.stringify(userData)
-            )
+            localStorage.setItem(constant.USER_DETAIL, JSON.stringify(userData))
             navigate("/")
           } else if (res.status === 0) {
             notifyMessage(MessageType.Warning, "Invalid user credentials")
@@ -147,7 +144,7 @@ export default function Login() {
               <input
                 type="file"
                 accept="image/*"
-                onChange={() => handleImageChange(e, setSelectedImage)}
+                onChange={(e) => handleImageChange(e, setSelectedImage)}
               />
               <button
                 type="button"

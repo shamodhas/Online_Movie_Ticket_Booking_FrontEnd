@@ -17,7 +17,7 @@ instance.interceptors.response.use(
           confirmButtonText: "Okay"
         }).then((result: any) => {
           if (result.isConfirmed) {
-            localStorage.remove(constant.ACCESS_TOKEN)
+            localStorage.removeItem(constant.ACCESS_TOKEN)
             window.location.replace("/login")
           }
         })
@@ -29,7 +29,7 @@ instance.interceptors.response.use(
 
       const config = {
         headers: {
-          Authorization: `Bearer ${localStorage.get(constant.ACCESS_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem(constant.ACCESS_TOKEN)}`,
           isRefreshToken: true
         }
       }
@@ -46,7 +46,7 @@ instance.interceptors.response.use(
           // window.location = constant.BASE_ROUTE_PATH+'/login';
         })
       if (isAccessTokenRefreshed) {
-        error.config.headers["Authorization"] = `Bearer ${localStorage.get(
+        error.config.headers["Authorization"] = `Bearer ${localStorage.getItem(
           constant.ACCESS_TOKEN
         )}`
         return axios.request(error.config)

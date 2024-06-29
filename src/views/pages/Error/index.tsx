@@ -20,9 +20,9 @@ export default class NotFound extends Component {
 //   const { q1, q2, q3, q4 } = answers
 
 //   if (q1 === null || q2 === null || q3 === null || q4 === null) {
-//     notifyWarning("Please answer all the questions.")
+//     notifyMessage(MessageType.Warning, "Please answer all the questions.")
 //   } else if (!isAgree) {
-//     notifyWarning("You must agree to the terms and privacy policy.")
+//     notifyMessage(MessageType.Warning, "You must agree to the terms and privacy policy.")
 //   } else {
 //     setLoading(true)
 //     await saveOnboardingQuestion({
@@ -41,7 +41,7 @@ export default class NotFound extends Component {
 
 //           navigate("/welcome")
 //         } else if (res.status === 0) {
-//           notifyWarning("Invalid answers")
+//           notifyMessage(MessageType.Warning, "Invalid answers")
 //         } else {
 //           notifyError(
 //             "Connection refused: Unable to connect to the server. Please check your internet connection or try again later."

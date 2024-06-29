@@ -13,7 +13,6 @@ export default function Home() {
   const [movies, setMovies] = useState([])
 
   useEffect(() => {
-    console.log("useEffect called")
     //getDataHandler()
   }, [])
 
@@ -24,7 +23,7 @@ export default function Home() {
         if (res.success) {
           setMovies(res.data ?? [])
         } else {
-          toast.error("Fail to load movies")
+          toast.error("Fail to load data")
         }
       })
       .finally(() => {

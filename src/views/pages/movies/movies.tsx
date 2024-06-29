@@ -1,49 +1,68 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Swal from "sweetalert2"
 import MovieCard from "../../../components/card/movie-card"
-import apiService from "../../services/apiService"
+import LoadingContext from "../../../context/loading-context"
+import { getAllMovies } from "../../../services/movie"
+import { toast } from "react-toastify"
 
 export default function Movies() {
+  const [, setLoading] = useContext(LoadingContext)
+
   const [movies, setMovies] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
 
   useEffect(() => {
-    loadAllMovies(currentPage)
+    //getDataHandler(currentPage)
   }, [])
 
-  const loadAllMovies = async (page: number) => {
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading()
+  const getDataHandler = async (page = 1) => {
+    setLoading(true)
+    await getAllMovies(page, 5)
+      .then((res) => {
+        if (res.success) {
+          setMovies(res.data ?? [])
+        } else {
+          toast.error("Fail to load data")
         }
       })
-
-      const response = await apiService.get(
-        `${movieEndPoint}/all?size=${5}&page=${page}`,
-        {
-          headers: {
-            verifyAuth: false
-          }
-        }
-      )
-
-      setMovies(response.data.data)
-      setTotalPages(response.data.pageCount)
-      Swal.close()
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Fail to load movies"
+      .finally(() => {
+        setLoading(false)
       })
-      console.log(err)
-    }
-    // finaly need new loader
   }
+
+  // const loadAllMovies = async (page: number) => {
+  //   try {
+  //     Swal.fire({
+  //       title: "Loading...",
+  //       allowOutsideClick: false,
+  //       didOpen: () => {
+  //         Swal.showLoading()
+  //       }
+  //     })
+
+  //     const response = await apiService.get(
+  //       `${movieEndPoint}/all?size=${5}&page=${page}`,
+  //       {
+  //         headers: {
+  //           verifyAuth: false
+  //         }
+  //       }
+  //     )
+
+  //     setMovies(response.data.data)
+  //     setTotalPages(response.data.pageCount)
+  //     Swal.close()
+  //   } catch (err) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Fail to load movies"
+  //     })
+  //     console.log(err)
+  //   }
+  //   // finaly need new loader
+  // }
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1)

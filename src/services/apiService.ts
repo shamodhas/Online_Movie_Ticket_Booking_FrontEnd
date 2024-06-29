@@ -22,7 +22,7 @@ async function callApi(apiObject: any) {
   }
 
   if (apiObject.authentication) {
-    headers.Authorization = `Bearer ${localStorage.get(constant.ACCESS_TOKEN)}`
+    headers.Authorization = `Bearer ${localStorage.getItem(constant.ACCESS_TOKEN)}`
   }
 
   let serverUrl = apiConfig.serverUrl
@@ -59,7 +59,7 @@ async function callApi(apiObject: any) {
         }
       } else if (error.response.status === 401) {
         if (apiObject.type !== "AUTH") {
-          localStorage.remove(constant.ACCESS_TOKEN)
+          localStorage.removeItem(constant.ACCESS_TOKEN)
           CommoNFunc.show(
             "Your session expired! Please login again..",
             "Session expired",
