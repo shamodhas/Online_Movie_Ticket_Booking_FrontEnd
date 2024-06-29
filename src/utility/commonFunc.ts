@@ -9,9 +9,9 @@ export enum MessageType {
 }
 
 export const notifyMessage = (
-  msg: string,
-  title: string,
   type: MessageType,
+  msg: string,
+  title?: string,
   place?: string,
   duration?: number
 ) => {

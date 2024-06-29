@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from "react"
 
 export default class NotFound extends Component {
   render() {
@@ -7,12 +7,12 @@ export default class NotFound extends Component {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "center"
         }}
       >
         404 Not Found
       </div>
-    );
+    )
   }
 }
 
@@ -24,7 +24,7 @@ export default class NotFound extends Component {
 //   } else if (!isAgree) {
 //     notifyWarning("You must agree to the terms and privacy policy.")
 //   } else {
-//     dispatch(setLoading(true))
+//     setLoading(true)
 //     await saveOnboardingQuestion({
 //       userDetailId: user.userId,
 //       onboardingQuestionDtoList: questions.map((question, index) => ({
@@ -35,9 +35,9 @@ export default class NotFound extends Component {
 //       .then((res) => {
 //         if (res.success) {
 //           const updateUser = { ...user, isFirstTimeSignIn: false }
-//           dispatch(setUserData(updateUser))
+//           setUserData(updateUser))
 //           Cookies.set(constant.USER_DATA, JSON.stringify(updateUser))
-//           localStorage.setItem(constant.USER_DATA, JSON.stringify(updateUser))
+//           localStorage.setItemItem(constant.USER_DATA, JSON.stringify(updateUser))
 
 //           navigate("/welcome")
 //         } else if (res.status === 0) {
@@ -49,45 +49,44 @@ export default class NotFound extends Component {
 //         }
 //       })
 //       .finally(() => {
-//         dispatch(setLoading(false))
+//         setLoading(false)
 //       })
 //   }
 // }
 
+// const getDataHandler = async () => {
+//   setLoading(true)
+//   if (pageType === HOME_ADS) {
+//     await getHomeAds()
+//       .then((res) => {
+//         if (res.success) {
+//           setData(res?.result ?? [])
+//         } else if (res.result) {
+//           toast.error(res.result)
+//         } else {
+//           toast.error("Somthing wrong")
+//         }
+//       })
+//       .finally(() => {
+//         setLoading(false)
+//       })
+//   } else if (pageType === ALL_ADS) {
+//     await getSiteAds()
+//       .then((res) => {
+//         if (res.success) {
+//           setData(res?.result ?? [])
+//         } else if (res.result) {
+//           toast.error(res.result)
+//         } else {
+//           toast.error("Somthing wrong")
+//         }
+//       })
+//       .finally(() => {
+//         setLoading(false)
+//       })
+//   }
+// }
 
-  // const getDataHandler = async () => {
-  //   dispatch(setLoading(true))
-  //   if (pageType === HOME_ADS) {
-  //     await getHomeAds()
-  //       .then((res) => {
-  //         if (res.success) {
-  //           setData(res?.result ?? [])
-  //         } else if (res.result) {
-  //           toast.error(res.result)
-  //         } else {
-  //           toast.error("Somthing wrong")
-  //         }
-  //       })
-  //       .finally(() => {
-  //         dispatch(setLoading(false))
-  //       })
-  //   } else if (pageType === ALL_ADS) {
-  //     await getSiteAds()
-  //       .then((res) => {
-  //         if (res.success) {
-  //           setData(res?.result ?? [])
-  //         } else if (res.result) {
-  //           toast.error(res.result)
-  //         } else {
-  //           toast.error("Somthing wrong")
-  //         }
-  //       })
-  //       .finally(() => {
-  //         dispatch(setLoading(false))
-  //       })
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getDataHandler()
-  // }, [])
+// useEffect(() => {
+//   getDataHandler()
+// }, [])

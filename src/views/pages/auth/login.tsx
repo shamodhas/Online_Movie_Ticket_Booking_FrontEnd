@@ -1,67 +1,78 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {ChangeEvent} from "react";
-import constant from "../../../configs/constant";
+import { useContext, useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { ChangeEvent } from "react"
+import constant from "../../../configs/constant"
+import { MessageType, notifyMessage } from "../../../utility/commonFunc"
+import LoadingContext from "../../../context/loading-context"
+import { login } from "../../../services/auth"
+
+const handleImageChange = (
+  event: ChangeEvent<HTMLInputElement>,
+  setSelectedImage: any
+) => {
+  const file = event.target.files?.[0]
+
+  if (file) {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const result = e.target?.result
+      if (result && typeof result === "string") {
+        setSelectedImage(result)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+}
 
 export default function Login() {
-  const [selectedImage, setSelectedImage] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState<string>("")
 
-    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
+  const [, setLoading] = useContext(LoadingContext)
 
-        if (file) {
-            const reader = new FileReader();
+  const [isHide, setIsHide] = useState(true)
+  const [isLogin, setLogin] = useState<boolean>(false)
+  const [username, setUsername] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
 
-            reader.onload = (e) => {
-                const result = e.target?.result;
-                if (result && typeof result === 'string') {
-                    setSelectedImage(result);
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-  const [isHide, setIsHide] = useState(true);
-
-  const [isLogin, setLogin] = useState<boolean>(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
-    setLogin(window.location.pathname === "/login");
-  }, []);
+    setLogin(window.location.pathname === "/login")
+  }, [])
 
-  
   const handleSubmit = async () => {
-    if (!email) {
-      notifyWarning("Email cannot be empty!")
+    console.log("test")
+    if (!username) {
+      notifyMessage(MessageType.Warning, "Email cannot be empty!")
     } else if (!password) {
-      notifyWarning("Password cannot be empty!")
+      notifyMessage(MessageType.Warning, "Password cannot be empty!")
     } else {
-      dispatch(setLoading(true))
-      await signIn({ email, password })
+      setLoading(true)
+      await login({ username, password })
         .then((res) => {
           if (res.success && res.result.token) {
-            const userData = {
+            const userData: {} = {
               ...res.result
             }
-            dispatch(setUserData(userData))
-            localStorage.set(constant.ACCESS_TOKEN, res.result.token)
-            localStorage.set(constant.USER_DETAIL, JSON.stringify(userData))
+            localStorage.setItem(constant.ACCESS_TOKEN, res.result.token)
             localStorage.setItem(constant.USER_DETAIL, JSON.stringify(userData))
-            if (res.result.isFirstTimeSignIn) {
-              navigate("/on-boarding-questions")
-            } else {
-              navigate("/security")
-            }
+            localStorage.setItemItem(
+              constant.USER_DETAIL,
+              JSON.stringify(userData)
+            )
+            navigate("/")
           } else if (res.status === 0) {
-            notifyWarning("Invalid user credentials")
+            notifyMessage(MessageType.Warning, "Invalid user credentials")
           } else {
-            notifyError(
+            notifyMessage(
+              MessageType.Error,
               "Connection refused: Unable to connect to the server. Please check your internet connection or try again later."
             )
           }
         })
         .finally(() => {
-          dispatch(setLoading(false))
+          setLoading(false)
         })
     }
   }
@@ -75,68 +86,79 @@ export default function Login() {
         }`}
       >
         <div className="w-3/5 p-5">
-        {isLogin ? (
-          <h1 className="text-center text-black mt-20 text-4xl mb-4">
+          {isLogin ? (
+            <h1 className="text-center text-black mt-20 text-4xl mb-4">
               Login
-          </h1>
-        ) : (
-          <h1 className="text-center text-black mt-10 text-4xl mb-4">
+            </h1>
+          ) : (
+            <h1 className="text-center text-black mt-10 text-4xl mb-4">
               Register
-          </h1>
-        )}
-        {isLogin ? (
-          <form className="max-w-xs mx-auto mt-10">
-              <input type="email" name="email" placeholder="Enter your email"/>
-              <input type={isHide ? 'password' : 'text'} name="password" placeholder="Enter your password"/>
+            </h1>
+          )}
+          {isLogin ? (
+            <form className="max-w-xs mx-auto mt-10">
+              <input
+                type="username"
+                name="username"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <input
+                type={isHide ? "password" : "text"}
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <div className="flex gap-5">
-                  <input className="w-10" type="checkbox" checked={!isHide} onChange={() => setIsHide(!isHide)}/>
-                  <label>Show password</label>
+                <input
+                  className="w-10"
+                  type="checkbox"
+                  checked={!isHide}
+                  onChange={() => setIsHide(!isHide)}
+                />
+                <label>Show password</label>
               </div>
-              <button type="button" className="bg-black h-10 mt-5 text-white hover:bg-primary-400">Login</button>
-          </form>
-        ) : (
-          <form className="block max-w-xs mx-auto">
-                    {selectedImage && (
-                        <div className="flex items-center justify-center m-4">
-                            <img
-                                src={selectedImage}
-                                alt="Selected image"
-                                className="rounded-full w-64 h-64 object-cover"
-                            />
-                        </div>
-                    )}
-                    <input
-                        type="text"
-                        placeholder="Enter your first name"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter your last name"
-                    />
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                    />
-                    <input
-                        type="email"
-                        placeholder="Enter your phone number"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Enter your password"
-                    />
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                    />
-                    <button type="button" className="bg-black h-10 text-center text-white hover:bg-gray-800">
-                        Register
-                    </button>
-                </form>
-        )}
+              <button
+                type="button"
+                className="bg-black h-10 mt-5 text-white hover:bg-primary-400"
+                onClick={handleSubmit}
+              >
+                Login
+              </button>
+            </form>
+          ) : (
+            <form className="block max-w-xs mx-auto">
+              {selectedImage && (
+                <div className="flex items-center justify-center m-4">
+                  <img
+                    src={selectedImage}
+                    alt="Selected image"
+                    className="rounded-full w-64 h-64 object-cover"
+                  />
+                </div>
+              )}
+              <input type="text" placeholder="Enter your first name" />
+              <input type="text" placeholder="Enter your last name" />
+              <input type="username" placeholder="Enter your username" />
+              <input type="username" placeholder="Enter your phone number" />
+              <input type="password" placeholder="Enter your password" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={() => handleImageChange(e, setSelectedImage)}
+              />
+              <button
+                type="button"
+                className="bg-black h-10 text-center text-white hover:bg-gray-800"
+              >
+                Register
+              </button>
+            </form>
+          )}
         </div>
-        
+
         <div
           className={`w-2/5 bg-black text-white py-36 px-12 ${
             isLogin
@@ -171,5 +193,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }

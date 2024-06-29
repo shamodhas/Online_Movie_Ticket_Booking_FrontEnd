@@ -23,7 +23,7 @@ export default function Register() {
     } else if (!isAgree) {
       notifyWarning("Please agree to the terms and conditions to proceed.")
     } else {
-      dispatch(setLoading(true))
+      setLoading(true)
       await createNewUser({
         firstName: fName,
         lastName: lName,
@@ -51,7 +51,7 @@ export default function Register() {
           }
         })
         .finally(() => {
-          dispatch(setLoading(false))
+          setLoading(false)
         })
     }
   }

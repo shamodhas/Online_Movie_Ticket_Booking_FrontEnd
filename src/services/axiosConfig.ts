@@ -38,7 +38,7 @@ instance.interceptors.response.use(
       await axios
         .post(`${URL}`, {}, config)
         .then(async (res) => {
-          await localStorage.set(constant.ACCESS_TOKEN, res.data.result)
+          await localStorage.setItem(constant.ACCESS_TOKEN, res.data.result)
           isAccessTokenRefreshed = true
         })
         .catch((err) => {
