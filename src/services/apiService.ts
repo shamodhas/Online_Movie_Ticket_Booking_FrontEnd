@@ -1,6 +1,5 @@
 import axios from "./axiosConfig"
 import apiConfig from "./apiConfig"
-import Cookies from "js-cookie"
 import * as constant from "../configs/constant"
 import CommoNFunc from "../utility/commonFunc"
 
@@ -23,7 +22,7 @@ async function callApi(apiObject: any) {
   }
 
   if (apiObject.authentication) {
-    headers.Authorization = `Bearer ${Cookies.get(constant.ACCESS_TOKEN)}`
+    headers.Authorization = `Bearer ${localStorage.get(constant.ACCESS_TOKEN)}`
   }
 
   let serverUrl = apiConfig.serverUrl
@@ -33,9 +32,7 @@ async function callApi(apiObject: any) {
     basePath = apiObject.basePath
   }
 
-  const url = `${serverUrl}/${basePath ? `/${basePath}` : ""}${
-    apiObject.endpoint
-  }`
+  const url = `${serverUrl}/${apiObject.endpoint}`
 
   let result
 
@@ -62,7 +59,7 @@ async function callApi(apiObject: any) {
         }
       } else if (error.response.status === 401) {
         if (apiObject.type !== "AUTH") {
-          Cookies.remove(constant.ACCESS_TOKEN)
+          localStorage.remove(constant.ACCESS_TOKEN)
           CommoNFunc.show(
             "Your session expired! Please login again..",
             "Session expired",

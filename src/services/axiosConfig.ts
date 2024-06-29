@@ -1,7 +1,6 @@
 import axios from "axios"
 import apiConfig from "./apiConfig"
 import * as constant from "../configs/constant"
-import Cookies from "js-cookie"
 import Swal from "sweetalert2"
 let isRefresh = false
 const instance = axios
@@ -18,7 +17,7 @@ instance.interceptors.response.use(
           confirmButtonText: "Okay"
         }).then((result: any) => {
           if (result.isConfirmed) {
-            Cookies.remove(constant.ACCESS_TOKEN)
+            localStorage.remove(constant.ACCESS_TOKEN)
             window.location.replace("/login")
           }
         })
@@ -26,11 +25,11 @@ instance.interceptors.response.use(
       }
       isRefresh = true
 
-      const URL = `${apiConfig.serverUrl}/${apiConfig.basePath}/auth/refresh-token`
+      const URL = `${apiConfig.serverUrl}/api/auth/refresh-token`
 
       const config = {
         headers: {
-          Authorization: `Bearer ${Cookies.get(constant.ACCESS_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.get(constant.ACCESS_TOKEN)}`,
           isRefreshToken: true
         }
       }
@@ -39,7 +38,7 @@ instance.interceptors.response.use(
       await axios
         .post(`${URL}`, {}, config)
         .then(async (res) => {
-          await Cookies.set(constant.ACCESS_TOKEN, res.data.result)
+          await localStorage.set(constant.ACCESS_TOKEN, res.data.result)
           isAccessTokenRefreshed = true
         })
         .catch((err) => {
@@ -47,7 +46,7 @@ instance.interceptors.response.use(
           // window.location = constant.BASE_ROUTE_PATH+'/login';
         })
       if (isAccessTokenRefreshed) {
-        error.config.headers["Authorization"] = `Bearer ${Cookies.get(
+        error.config.headers["Authorization"] = `Bearer ${localStorage.get(
           constant.ACCESS_TOKEN
         )}`
         return axios.request(error.config)

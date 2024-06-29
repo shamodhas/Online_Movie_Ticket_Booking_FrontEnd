@@ -1,40 +1,37 @@
 import ApiService from "./apiService"
 
-export async function signIn(userCredentials) {
-  const apiObject = {}
+interface ApiObject {
+  method?: string
+  authentication?: boolean
+  endpoint?: string
+  body?: any
+  type?: any
+}
+
+export async function login(userCredentials: {
+  username: string
+  password: string
+}) {
+  const apiObject: ApiObject = {}
   apiObject.method = "POST"
   apiObject.authentication = false
-  apiObject.endpoint = "auth/signIn"
+  apiObject.endpoint = "api/auth/login"
   apiObject.body = userCredentials
   apiObject.type = "AUTH"
   return await ApiService.callApi(apiObject)
 }
 
-export async function createNewUser(userCredentials) {
-  const apiObject = {}
+export async function register(userCredentials: {
+  username: string
+  email: string
+  password: string
+  role: "Admin" | "Customer" | "TheaterOwner"
+}) {
+  const apiObject: ApiObject = {}
   apiObject.method = "POST"
   apiObject.authentication = false
-  apiObject.endpoint = "auth/signUp"
+  apiObject.endpoint = "api/auth/register"
   apiObject.body = userCredentials
   apiObject.type = "AUTH"
-  return await ApiService.callApi(apiObject)
-}
-
-export async function changePassword(userCredentials) {
-  const apiObject = {}
-  apiObject.method = "POST"
-  apiObject.authentication = true
-  apiObject.endpoint = "auth/changePassword"
-  apiObject.body = userCredentials
-  return await ApiService.callApi(apiObject)
-}
-
-export async function getUserDetailByUserId(id) {
-  const apiObject = {}
-  apiObject.method = "GET"
-  apiObject.authentication = true
-  apiObject.endpoint = `auth/getUserById/${id}`
-  apiObject.body = null
-  apiObject.notGroup = true
   return await ApiService.callApi(apiObject)
 }

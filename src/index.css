@@ -1,6 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+/* @import '~react-toastify/dist/ReactToastify.css'; */
 
 @layer components {
   .nav-link-mobile {
@@ -43,4 +44,8 @@ h1,
 
 .bg-transparent-2 {
   background-color: #232323d4;
+}
+
+.no-tailwind {
+  all: unset;
 }

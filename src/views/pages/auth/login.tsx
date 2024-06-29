@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {ChangeEvent} from "react";
+import constant from "../../../configs/constant";
 
 export default function Login() {
   const [selectedImage, setSelectedImage] = useState<string>('');
@@ -43,10 +44,9 @@ export default function Login() {
               ...res.result
             }
             dispatch(setUserData(userData))
-            Cookies.set(constant.ACCESS_TOKEN, res.result.token)
-            Cookies.set(constant.REFRESH_TOKEN, res.result.token)
-            Cookies.set(constant.USER_DATA, JSON.stringify(userData))
-            localStorage.setItem(constant.USER_DATA, JSON.stringify(userData))
+            localStorage.set(constant.ACCESS_TOKEN, res.result.token)
+            localStorage.set(constant.USER_DETAIL, JSON.stringify(userData))
+            localStorage.setItem(constant.USER_DETAIL, JSON.stringify(userData))
             if (res.result.isFirstTimeSignIn) {
               navigate("/on-boarding-questions")
             } else {
