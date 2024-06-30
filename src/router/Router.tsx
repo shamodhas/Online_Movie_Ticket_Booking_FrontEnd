@@ -46,17 +46,6 @@ const AppRoutes = () => {
     { path: "theater-halls", element: Halls },
     { path: "*", element: Error, blankLayout: true, authRoute: true }
   ]
-  interface FinalRoutePropsType {
-    route: any
-    isAuth: () => boolean
-  }
-
-  const FinalRoute = ({ route, isAuth, ...props }: FinalRoutePropsType) => {
-    // if (!route?.authRoute && !isAuth()) {
-    //   return <Navigate to="/login" />
-    // }
-    return <route.element {...props} />
-  }
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -66,7 +55,7 @@ const AppRoutes = () => {
             <Route
               key={index}
               path={route.path}
-              element={<FinalRoute route={route} isAuth={isAuth} />}
+              element={<route.element />}
             />
           ))}
         </Routes>

@@ -6,11 +6,15 @@ import Router from "./router/Router"
 import LoadingContext from "./context/loading-context"
 import Loader from "./components/Loader"
 import { Toaster } from "react-hot-toast"
+import constant from "./configs/constant"
 
 function App(): JSX.Element {
-  const [user, setUser] = useState<User>({ role: GUEST })
+  const localUser = localStorage.getItem(constant.USER_DETAIL)
+
+  const [user, setUser] = useState<User>(
+    !!localUser ? JSON.parse(localUser) : { role: GUEST }
+  )
   const [loading, setLoading] = useState(false)
-  console.log(user)
 
   return (
     <UserContext.Provider value={[user, setUser]}>

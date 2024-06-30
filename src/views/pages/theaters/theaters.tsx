@@ -1,53 +1,45 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { getAllTheaters } from "../../../services/theaters";
+import { toast } from "react-toastify";
+import LoadingContext from "../../../context/loading-context";
 
 export default function Theaters() {
+    const [, setLoading] = useContext(LoadingContext)
+
   const [theaters, setTheaters] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  
-  const itemsPerPage = 2;
-  const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT;
 
   useEffect(() => {
-    loadAllTheaters(currentPage);
-  }, []);
+    getDataHandler(currentPage)
+  }, [currentPage])
 
-  const loadAllTheaters = async (page: number) => {
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-
-      const response = await axios.get(
-        `${theaterEndPoint}/all?size=${itemsPerPage}&page=${page}`
-      );
-
-      Swal.close();
-      setTheaters(response.data.data);
-      setTotalPages(response.data.pageCount);
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Fail to load theaters",
-      });
-      console.log(err);
-    }
-  };
+  const getDataHandler = async (page: number) => {
+    setLoading(true)
+    await getAllTheaters(page, 5)
+      .then((res) => {
+        if (res.success) {
+          setTheaters(res.data ?? [])
+          setTotalPages(res.pageCount ?? 0)
+        } else {
+          toast.error("Fail to load data")
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
-    loadAllTheaters(currentPage + 1);
+    getDataHandler(currentPage + 1)
   };
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    loadAllTheaters(currentPage - 1);
+    getDataHandler(currentPage - 1)
   };
 
   return (
@@ -64,7 +56,7 @@ export default function Theaters() {
           </thead>
           <tbody className="text-white">
             {theaters?.map((theater: any, index) => {
-              const id = (currentPage - 1) * itemsPerPage + index + 1;
+              const id = index + 1;
 
               return (
                 <tr

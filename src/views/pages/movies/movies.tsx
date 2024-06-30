@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import Swal from "sweetalert2"
 import MovieCard from "../../../components/card/movie-card"
 import LoadingContext from "../../../context/loading-context"
 import { getAllMovies } from "../../../services/movie"
@@ -10,19 +9,19 @@ export default function Movies() {
 
   const [movies, setMovies] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
+  const [totalPages, setTotalPages] = useState(0)
 
   useEffect(() => {
-    //getDataHandler(currentPage)
-  }, [])
+    getDataHandler(currentPage)
+  }, [currentPage])
 
-  const getDataHandler = async (page = 1) => {
+  const getDataHandler = async (page: number) => {
     setLoading(true)
     await getAllMovies(page, 5)
       .then((res) => {
         if (res.success) {
           setMovies(res.data ?? [])
+          setTotalPages(res.pageCount ?? 0)
         } else {
           toast.error("Fail to load data")
         }
@@ -32,46 +31,14 @@ export default function Movies() {
       })
   }
 
-  // const loadAllMovies = async (page: number) => {
-  //   try {
-  //     Swal.fire({
-  //       title: "Loading...",
-  //       allowOutsideClick: false,
-  //       didOpen: () => {
-  //         Swal.showLoading()
-  //       }
-  //     })
-
-  //     const response = await apiService.get(
-  //       `${movieEndPoint}/all?size=${5}&page=${page}`,
-  //       {
-  //         headers: {
-  //           verifyAuth: false
-  //         }
-  //       }
-  //     )
-
-  //     setMovies(response.data.data)
-  //     setTotalPages(response.data.pageCount)
-  //     Swal.close()
-  //   } catch (err) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Fail to load movies"
-  //     })
-  //     console.log(err)
-  //   }
-  //   // finaly need new loader
-  // }
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1)
-    loadAllMovies(currentPage + 1)
+  const handleNextPage = (e: any) => {
+    e.preventDefault()
+    setCurrentPage(currentPage + 1)
   }
 
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
-    loadAllMovies(currentPage - 1)
+  const handlePrevPage = (e: any) => {
+    e.preventDefault()
+    setCurrentPage(Math.max(currentPage - 1, 1))
   }
 
   return (
@@ -88,23 +55,25 @@ export default function Movies() {
           )
         })}
       </div>
-      <div className="text-white flex justify-center items-center m-5">
-        <button
-          className="bg-transparent-1 py-1 px-5 w-fit disabled:bg-black"
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span className="mx-4 whitespace-nowrap">{`Page ${currentPage} of ${totalPages}`}</span>
-        <button
-          className="bg-transparent-1 py-1 px-5 w-fit disabled:bg-black"
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      {totalPages > 0 && (
+        <div className="text-white flex justify-center items-center m-5">
+          <button
+            className="bg-transparent-1 py-1 px-5 w-fit disabled:bg-black"
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span className="mx-4 whitespace-nowrap">{`Page ${currentPage} of ${totalPages}`}</span>
+          <button
+            className="bg-transparent-1 py-1 px-5 w-fit disabled:bg-black"
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </>
   )
 }
