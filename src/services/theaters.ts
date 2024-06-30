@@ -27,11 +27,9 @@ export async function getTheaterById(theaterId: string): Promise<any> {
 
 // theater api
 export async function createTheater(theaterData: {
-  title: string
-  description: string
-  releaseDate: Date
-  director: string
-  imageUrl?: string
+  name: string
+  location: string
+  userId: string
 }): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "POST"

@@ -26,8 +26,6 @@ function MovieEditor() {
   const [image, setImage] = useState<any>(null)
 
   const fileInputRef = useRef(null)
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
-  const authToken = import.meta.env.VITE_AUTH
 
   const handleImageChange = (e: any) => {
     const imageFile = e.target.files[0]
@@ -35,6 +33,7 @@ function MovieEditor() {
   }
 
   const handleSaveMovie = async () => {
+    console.log(image)
     const data = new FormData()
     data.append("userId", user.id)
     data.append("title", title) //
@@ -42,13 +41,8 @@ function MovieEditor() {
     data.append("releaseDate", releaseDate) //
     data.append("director", director) //
     data.append("status", status) //
-    data.append("image", image)
-
-    // if (!username) {
-    //   notifyMessage(MessageType.Warning, "Email cannot be empty!")
-    // } else if (!password) {
-    //   notifyMessage(MessageType.Warning, "Password cannot be empty!")
-    // } else {
+    data.append("file", image)
+    
     setLoading(true)
     await createMovie(data)
       .then((res) => {
@@ -233,6 +227,7 @@ function MovieEditor() {
           <input
             disabled={movie ? true : false}
             type="file"
+            name="file"
             id="movie_image"
             placeholder="image"
             onChange={handleImageChange}

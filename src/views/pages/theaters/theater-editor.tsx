@@ -1,10 +1,14 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Theater } from "../../../types/theater"
 import CloseButton from "../../../components/button/close-button"
 import Input from "../../../components/input/input"
 import Swal from "sweetalert2"
 import axios from "axios"
+import { createTheater } from "../../../services/theaters"
+import LoadingContext from "../../../context/loading-context"
+import { MessageType, notifyMessage } from "../../../utility/commonFunc"
+import UserContext from "../../../context/user-context"
 
 function TheaterEditor() {
   const use_location = useLocation()
@@ -23,44 +27,31 @@ function TheaterEditor() {
 
   const theaterEndPoint = import.meta.env.VITE_THEATER_END_POINT
   const authToken = import.meta.env.VITE_AUTH
+  const [, setLoading] = useContext(LoadingContext)
+  const [user] = useContext(UserContext)
 
   const handleSaveTheater = async () => {
-    const data = {
+    setLoading(true)
+    await createTheater({
       name,
       location,
-      mobileNumber
-    }
-
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        showConfirmButton: false
-      })
-
-      await axios.post(theaterEndPoint, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
+      userId: user.id
+    })
+      .then((res) => {
+        if (res.success) {
+          notifyMessage(MessageType.Success, "Done.")
+          handleReset()
+          handleClose()
+        } else {
+          notifyMessage(
+            MessageType.Error,
+            "Connection refused: Unable to connect to the server. Please check your internet connection or try again later."
+          )
         }
       })
-
-      Swal.close()
-      Swal.fire({
-        icon: "success",
-        title: "Theater saved",
-        showConfirmButton: false,
-        timer: 1500
+      .finally(() => {
+        setLoading(false)
       })
-      handleReset()
-    } catch (error: any) {
-      Swal.close()
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message
-      })
-      console.log(error.response.data.message)
-    }
   }
 
   const handleUpdateTheater = async () => {
@@ -111,9 +102,7 @@ function TheaterEditor() {
   }
 
   const handleClose = () => {
-    navigate("/my-theaters", {
-      state: { currentPage: use_location?.state?.currentPage ?? 1 }
-    })
+    navigate("/theaters")
   }
 
   return (
@@ -143,17 +132,6 @@ function TheaterEditor() {
           value={location}
           callBack={(e: any) => {
             setLocation(e.target.value)
-          }}
-        />
-        <Input
-          type={"text"}
-          name={"mobileNumber"}
-          placeholder={"mobile number"}
-          label={"Mobile Number"}
-          optional={false}
-          value={mobileNumber}
-          callBack={(e: any) => {
-            setMobileNumber(e.target.value)
           }}
         />
         {theater ? (

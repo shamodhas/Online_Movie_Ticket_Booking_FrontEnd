@@ -115,18 +115,18 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <div className="flex gap-5">
+              <div className="flex gap-5 justify-center align-center">
                 <input
                   className="w-10"
                   type="checkbox"
                   checked={!isHide}
                   onChange={() => setIsHide(!isHide)}
                 />
-                <label>Show password</label>
+                <label className="m-0">Show password</label>
               </div>
               <button
                 type="button"
-                className="bg-black h-10 mt-5 text-white hover:bg-primary-400"
+                className="bg-black h-10 mt-5 p-2 text-white hover:bg-primary-400"
                 onClick={handleSubmit}
               >
                 Login
