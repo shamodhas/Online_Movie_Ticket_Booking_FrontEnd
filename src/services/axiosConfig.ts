@@ -43,7 +43,7 @@ instance.interceptors.response.use(
         })
         .catch((err) => {
           throw err
-          // window.location = constant.BASE_ROUTE_PATH+'/login';
+            window.location.replace("/login")
         })
       if (isAccessTokenRefreshed) {
         error.config.headers["Authorization"] = `Bearer ${localStorage.getItem(

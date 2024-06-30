@@ -55,6 +55,7 @@ export default function Login() {
         .then((res) => {
           if (res.success && res.data.token) {
             const userData = {
+              id: res.data.userId,
               name: res.data.name,
               email: res.data.email,
               status: res.data.status,

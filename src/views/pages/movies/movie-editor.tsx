@@ -1,26 +1,28 @@
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import Input from "../../../components/input/input"
 import Swal from "sweetalert2"
 import axios from "axios"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Movie } from "../../../types/movie"
 import CloseButton from "../../../components/button/close-button"
+import UserContext from "../../../context/user-context"
+import LoadingContext from "../../../context/loading-context"
+import { createMovie } from "../../../services/movie"
+import { MessageType, notifyMessage } from "../../../utility/commonFunc"
 
 function MovieEditor() {
   const location = useLocation()
   const navigate = useNavigate()
+  const [user] = useContext(UserContext)
+  const [, setLoading] = useContext(LoadingContext)
 
-  const [movie, setMovie] = useState<Movie | null>(
-    location?.state?.movie ?? null
-  )
+  const [movie, setMovie] = useState<any | null>(location?.state?.movie ?? null)
 
-  const [name, setName] = useState(movie ? movie.name : "")
-  const [director, setDirector] = useState(movie ? movie.director : "")
-  const [language, setLanguage] = useState(movie ? movie.language : "")
+  const [title, setTitle] = useState(movie ? movie.title : "")
   const [description, setDescription] = useState(movie ? movie.description : "")
-  const [startDate, setStartDate] = useState(movie ? movie.startDate : "")
-  const [endDate, setEndDate] = useState(movie ? movie.endDate : "")
-  const [trailerLink, setTrailerLink] = useState(movie ? movie.trailerLink : "")
+  const [releaseDate, setReleaseDate] = useState(movie ? movie.releaseDate : "")
+  const [director, setDirector] = useState(movie ? movie.director : "")
+  const [status, setStatus] = useState(movie ? movie.status : "")
   const [image, setImage] = useState<any>(null)
 
   const fileInputRef = useRef(null)
@@ -34,99 +36,88 @@ function MovieEditor() {
 
   const handleSaveMovie = async () => {
     const data = new FormData()
-    data.append("name", name)
-    data.append("director", director)
-    data.append("language", language)
+    data.append("userId", user.id)
+    data.append("title", title) //
     data.append("description", description)
-    data.append("startDate", startDate.toString())
-    data.append("endDate", endDate.toString())
-    data.append("trailerLink", trailerLink)
-    data.append("file", image)
+    data.append("releaseDate", releaseDate) //
+    data.append("director", director) //
+    data.append("status", status) //
+    data.append("image", image)
 
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        showConfirmButton: false
-      })
-
-      await axios.post(movieEndPoint, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${authToken}`
+    // if (!username) {
+    //   notifyMessage(MessageType.Warning, "Email cannot be empty!")
+    // } else if (!password) {
+    //   notifyMessage(MessageType.Warning, "Password cannot be empty!")
+    // } else {
+    setLoading(true)
+    await createMovie(data)
+      .then((res) => {
+        if (res.success) {
+           notifyMessage(
+             MessageType.Success,
+             "Done."
+           )
+            handleReset()
+            handleClose()
+        }else {
+          notifyMessage(
+            MessageType.Error,
+            "Connection refused: Unable to connect to the server. Please check your internet connection or try again later."
+          )
         }
       })
-
-      Swal.close()
-      Swal.fire({
-        icon: "success",
-        title: "Movie saved",
-        showConfirmButton: false,
-        timer: 1500
+      .finally(() => {
+        setLoading(false)
       })
-      handleReset()
-    } catch (error: any) {
-      Swal.close()
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message
-      })
-      console.log(error)
-    }
+    // }
   }
 
   const handleUpdateMovie = async () => {
-    const data = {
-      name,
-      director,
-      language,
-      description,
-      startDate: startDate.toString(),
-      endDate: endDate.toString(),
-      trailerLink
-    }
-
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        showConfirmButton: false
-      })
-
-      await axios.put(`${movieEndPoint}/${movie?._id}`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`
-        }
-      })
-
-      Swal.fire({
-        icon: "success",
-        title: "Movie updated",
-        showConfirmButton: false,
-        timer: 1500
-      })
-      handleReset()
-      handleClose()
-    } catch (error: any) {
-      Swal.fire({
-        icon: "error",
-        title: error.response?.data?.message || "Failed to update movie"
-      })
-
-      console.error(error)
-    }
+    // const data = {
+    //   name,
+    //   director,
+    //   language,
+    //   description,
+    //   startDate: startDate.toString(),
+    //   endDate: endDate.toString(),
+    //   trailerLink
+    // }
+    // try {
+    //   Swal.fire({
+    //     title: "Loading...",
+    //     allowOutsideClick: false,
+    //     showConfirmButton: false
+    //   })
+    //   await axios.put(`${movieEndPoint}/${movie?._id}`, data, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${authToken}`
+    //     }
+    //   })
+    //   Swal.fire({
+    //     icon: "success",
+    //     title: "Movie updated",
+    //     showConfirmButton: false,
+    //     timer: 1500
+    //   })
+    //   handleReset()
+    //   handleClose()
+    // } catch (error: any) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: error.response?.data?.message || "Failed to update movie"
+    //   })
+    //   console.error(error)
+    // }
   }
 
   const handleReset = () => {
     setMovie(null)
-    setName("")
-    setDirector("")
-    setLanguage("")
+    setTitle("")
     setDescription("")
-    setStartDate("")
-    setEndDate("")
-    setTrailerLink("")
+    setReleaseDate("")
+    setDirector("")
+    setStatus("")
     setImage(null)
 
     if (fileInputRef.current) {
@@ -148,19 +139,19 @@ function MovieEditor() {
         <h1 className="text-white mb-2">{movie ? "Update" : "Add"} Movie</h1>
         <Input
           type={"text"}
-          name={"movie_name"}
-          placeholder={"name"}
-          label={"Name"}
+          name={"title"}
+          placeholder={"title"}
+          label={"Title"}
           optional={false}
           callBack={(e: any) => {
-            setName(e.target.value)
+            setTitle(e.target.value)
           }}
-          value={name}
+          value={title}
         />
         <div className="flex flex-col md:flex-row w-full gap-4">
           <Input
             type={"text"}
-            name={"movie_director"}
+            name={"director"}
             placeholder={"director"}
             label={"Director"}
             optional={false}
@@ -169,21 +160,33 @@ function MovieEditor() {
             }}
             value={director}
           />
-          <Input
+          {/* <Input
             type={"text"}
-            name={"movie_language"}
-            placeholder={"language"}
-            label={"Language"}
+            name={"status"}
+            placeholder={"status"}
+            label={"Status"}
             optional={false}
             callBack={(e: any) => {
-              setLanguage(e.target.value)
+              setStatus(e.target.value)
             }}
-            value={language}
-          />
+            value={status}
+          /> */}
+          <select
+            name={"status"}
+            value={status}
+            onChange={(e: any) => {
+              setStatus(e.target.value)
+            }}
+          >
+            <option value="">Select Status</option>
+            <option value="upcoming">Select upcoming</option>
+            <option value="nowShowing">Select nowShowing</option>
+            <option value="past">Select past</option>
+          </select>
         </div>
         <Input
           type={"text"}
-          name={"movie_description"}
+          name={"description"}
           placeholder={"description"}
           label={"Description"}
           optional={false}
@@ -195,38 +198,27 @@ function MovieEditor() {
         <div className="flex flex-col md:flex-row w-full gap-4">
           <Input
             type={"date"}
-            name={"movie_start_date"}
-            placeholder={"start date"}
-            label={"Start Date"}
+            name={"releaseDate"}
+            placeholder={"release date"}
+            label={"Release Date"}
             optional={false}
             callBack={(e: any) => {
-              setStartDate(e.target.value)
+              setReleaseDate(e.target.value)
             }}
-            value={startDate?.toString().split("T")[0]}
+            value={releaseDate?.toString().split("T")[0]}
           />
           <Input
-            type={"date"}
-            name={"movie_end_date"}
-            placeholder={"end date"}
-            label={"End Date"}
+            type={"text"}
+            name={"description"}
+            placeholder={"description"}
+            label={"Description"}
             optional={false}
             callBack={(e: any) => {
-              setEndDate(e.target.value)
+              setDescription(e.target.value)
             }}
-            value={endDate?.toString().split("T")[0]}
+            value={description}
           />
         </div>
-        <Input
-          type={"text"}
-          name={"movie_trailer_link"}
-          placeholder={"trailer link"}
-          label={"Trailer Link"}
-          optional={false}
-          callBack={(e: any) => {
-            setTrailerLink(e.target.value)
-          }}
-          value={trailerLink}
-        />
 
         <div className={"w-full"}>
           <label

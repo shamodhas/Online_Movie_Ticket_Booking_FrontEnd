@@ -19,20 +19,14 @@ export async function getAllMovies(page: number, size: number) {
 export async function getMovieById(theaterId: string): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "GET"
-  apiObject.authentication = false
+  apiObject.authentication = true
   apiObject.endpoint = `api/movies/${theaterId}`
   apiObject.body = null
   return await ApiService.callApi(apiObject)
 }
 
 // theater api
-export async function createMovie(movieData: {
-  title: string
-  description: string
-  releaseDate: Date
-  director: string
-  imageUrl?: string
-}): Promise<any> {
+export async function createMovie(movieData: any): Promise<any> {
   const apiObject: ApiObject = {}
   apiObject.method = "POST"
   apiObject.authentication = true

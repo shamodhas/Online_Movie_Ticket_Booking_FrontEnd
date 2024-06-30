@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import Swal from "sweetalert2"
 import MovieCard from "../../../components/card/movie-card"
@@ -6,10 +6,16 @@ import DeleteIcon from "../../../assets/icons/delete"
 import EditIcon from "../../../assets/icons/edit"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Movie } from "../../../types/movie"
+import LoadingContext from "../../../context/loading-context"
+import { getMovieById } from "../../../services/movie"
+import { toast } from "react-toastify"
+import UserContext from "../../../context/user-context"
 
 function MyMovies() {
   const navigate = useNavigate()
   const location = useLocation()
+  const [, setLoading] = useContext(LoadingContext)
+
 
   const [movies, setMovies] = useState([])
   const [currentPage, setCurrentPage] = useState<number>(
@@ -21,58 +27,23 @@ function MyMovies() {
   const authToken = import.meta.env.VITE_AUTH
 
   useEffect(() => {
-    loadAllMyMovies(currentPage)
-  }, [])
+    //  getDataHandler(currentPage)
+  }, [currentPage])
 
-  const loadAllMyMovies = async (page: number) => {
-    try {
-      const response = await axios.get(
-        `${movieEndPoint}/my?size=${5}&page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        }
-      )
-      setMovies(response.data.data)
-      setTotalPages(response.data.pageCount)
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Fail to load movies"
-      })
-      console.log(err)
-      navigate("/login")
-    }
-
-    try {
-      Swal.fire({
-        title: "Loading...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading()
+  const getDataHandler = async (page: number) => {
+    setLoading(true)
+    await getMovieById(page, 5)
+      .then((res) => {
+        if (res.success) {
+          setMovies(res.data ?? [])
+          setTotalPages(res.pageCount ?? 0)
+        } else {
+          toast.error("Fail to load data")
         }
       })
-
-      const response = await axios.get(
-        `${movieEndPoint}/my?size=${5}&page=${page}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`
-          }
-        }
-      )
-      setMovies(response.data.data)
-      setTotalPages(response.data.pageCount)
-      Swal.close()
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Fail to load movies"
+      .finally(() => {
+        setLoading(false)
       })
-      console.log(err)
-      navigate("/login")
-    }
   }
 
   const handleDeleteMovie = async (movie: Movie) => {
@@ -84,12 +55,7 @@ function MyMovies() {
         showConfirmButton: false
       })
 
-      const response = await axios.delete(`${movieEndPoint}/${movie._id}`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`
-        }
-      })
-      loadAllMyMovies(currentPage)
+      getDataHandler(currentPage)
       Swal.close()
       Swal.fire({
         icon: "success",
@@ -97,8 +63,6 @@ function MyMovies() {
         showConfirmButton: false,
         timer: 1500
       })
-
-      console.log(response.data)
     } catch (error: any) {
       Swal.close()
       Swal.fire({
@@ -111,12 +75,10 @@ function MyMovies() {
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1)
-    loadAllMyMovies(currentPage + 1)
   }
 
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
-    loadAllMyMovies(currentPage - 1)
   }
 
   const handleGoAddMovie = () => {
