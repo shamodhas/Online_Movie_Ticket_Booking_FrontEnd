@@ -18,7 +18,7 @@ export default function Movies() {
   const getDataHandler = async (page: number) => {
     setLoading(true)
     await getAllMovies(page, 5)
-      .then((res) => {
+      .then((res:any) => {
         if (res.success) {
           setMovies(res.data ?? [])
           setTotalPages(res.pageCount ?? 0)

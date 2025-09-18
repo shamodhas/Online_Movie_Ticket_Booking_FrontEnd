@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from "react"
-import axios from "axios"
 import Swal from "sweetalert2"
 import MovieCard from "../../../components/card/movie-card"
 import DeleteIcon from "../../../assets/icons/delete"
 import EditIcon from "../../../assets/icons/edit"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Movie } from "../../../types/movie"
 import LoadingContext from "../../../context/loading-context"
-import { getMovieById } from "../../../services/movie"
+import { getAllMovies } from "../../../services/movie"
 import { toast } from "react-toastify"
-import UserContext from "../../../context/user-context"
 
 function MyMovies() {
   const navigate = useNavigate()
@@ -23,8 +20,6 @@ function MyMovies() {
   )
   const [totalPages, setTotalPages] = useState(1)
 
-  const movieEndPoint = import.meta.env.VITE_MOVIE_END_POINT
-  const authToken = import.meta.env.VITE_AUTH
 
   useEffect(() => {
     //  getDataHandler(currentPage)
@@ -32,8 +27,8 @@ function MyMovies() {
 
   const getDataHandler = async (page: number) => {
     setLoading(true)
-    await getMovieById(page, 5)
-      .then((res) => {
+    await getAllMovies(page, 5)
+      .then((res:any) => {
         if (res.success) {
           setMovies(res.data ?? [])
           setTotalPages(res.pageCount ?? 0)
@@ -46,7 +41,7 @@ function MyMovies() {
       })
   }
 
-  const handleDeleteMovie = async (movie: Movie) => {
+  const handleDeleteMovie = async (_:any) => {
     try {
       Swal.fire({
         title: "Loading...",

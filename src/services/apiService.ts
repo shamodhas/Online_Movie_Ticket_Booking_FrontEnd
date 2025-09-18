@@ -22,22 +22,24 @@ async function callApi(apiObject: any) {
   }
 
   if (apiObject.authentication) {
-    headers.Authorization = `Bearer ${localStorage.getItem(constant.ACCESS_TOKEN)}`
+    headers.Authorization = `Bearer ${localStorage.getItem(
+      constant.ACCESS_TOKEN
+    )}`
   }
 
   let serverUrl = apiConfig.serverUrl
-  let basePath = apiConfig.basePath
+  // let basePath = apiConfig.basePath
 
-  if (apiObject.basePath) {
-    basePath = apiObject.basePath
-  }
+  // if (apiObject.basePath) {
+  //   basePath = apiObject.basePath
+  // }
 
   const url = `${serverUrl}/${apiObject.endpoint}`
 
   let result
 
   try {
-    const response = await axios.request({
+    const response: any = await axios.request({
       url,
       method,
       data: method !== "get" && method !== "delete" ? body : undefined,

@@ -34,7 +34,7 @@ function MyTheaters() {
         }
       })
 
-      const response = await axios.get(
+      const response:any = await axios.get(
         `${theaterEndPoint}/my?size=${2}&page=${page}`,
         {
           headers: {

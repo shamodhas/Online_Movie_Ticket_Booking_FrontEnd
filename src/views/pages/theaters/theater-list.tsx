@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'; // Example of using axios for API requests
 
@@ -7,7 +7,7 @@ const TheaterList = () => {
 
     useEffect(() => {
         // Fetch theaters from backend API
-        axios.get('/api/theaters')
+        axios.get<any>('/api/theaters')
             .then(response => setTheaters(response.data))
             .catch(error => console.error('Error fetching theaters:', error));
     }, []);

@@ -1,6 +1,5 @@
-import React, { lazy, Suspense, useContext } from "react"
-import { Navigate, Route, Routes } from "react-router-dom"
-import constant from "../configs/constant"
+import { lazy, Suspense, useContext } from "react"
+import { Route, Routes } from "react-router-dom"
 import UserContext from "../context/user-context"
 import PageLoader from "../components/PageLoader"
 import Layout from "../components/layout"
@@ -19,18 +18,18 @@ const TheaterEditor = lazy(
 const Halls = lazy(() => import("./../views/pages/theaters/halls"))
 const Error = lazy(() => import("../views/pages/Error"))
 
-interface DefaulRoutesProps {
-  isAuth: boolean
-}
+// interface DefaulRoutesProps {
+//   isAuth: boolean
+// }
 
-const DefaulRoutes: React.FC<DefaulRoutesProps> = ({ isAuth }) =>
-  isAuth ? <Navigate to="/home" /> : <Navigate to="/login" />
+// const DefaulRoutes: React.FC<DefaulRoutesProps> = ({ isAuth }) =>
+//   isAuth ? <Navigate to="/home" /> : <Navigate to="/login" />
 
 const AppRoutes = () => {
   const [user] = useContext(UserContext)
-  const token = localStorage.getItem(constant.ACCESS_TOKEN)
+  // const token = localStorage.getItem(constant.ACCESS_TOKEN)
 
-  const isAuth = () => !!user && !!token
+  // const isAuth = () => !!user && !!token
 
   const routes = [
     { path: "/", element: Home, authRoute: true },

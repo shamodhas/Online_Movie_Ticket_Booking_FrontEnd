@@ -31,7 +31,7 @@ export default function Login() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [, setLoading] = useContext(LoadingContext);
-  const [user, setUser] = useContext(UserContext);
+  const [, setUser] = useContext(UserContext);
 
   const [isHide, setIsHide] = useState(true);
   const [isLogin, setLogin] = useState<boolean>(false);

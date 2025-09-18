@@ -1,6 +1,4 @@
-import axios from "axios"
 import { useContext, useEffect, useState } from "react"
-import Swal from "sweetalert2"
 import { getAllTheaters } from "../../../services/theaters"
 import { toast } from "react-toastify"
 import LoadingContext from "../../../context/loading-context"
@@ -53,12 +51,6 @@ export default function Theaters() {
 
   const handleGoAddTheater = () => {
     navigate("/theater-editor", {
-      state: { currentPage }
-    })
-  }
-
-  const handleGoAddHalls = () => {
-    navigate("/theater-halls", {
       state: { currentPage }
     })
   }

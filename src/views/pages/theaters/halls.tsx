@@ -41,7 +41,7 @@ function Halls() {
         }
       })
 
-      const response = await axios.get(`${theaterEndPoint}/my`, {
+      const response:any = await axios.get(`${theaterEndPoint}/my`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
@@ -83,7 +83,7 @@ function Halls() {
         }
       })
 
-      const response = await axios.get(`${hallEndPoint}/theater/${theaterId}`, {
+      const response:any = await axios.get(`${hallEndPoint}/theater/${theaterId}`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         }

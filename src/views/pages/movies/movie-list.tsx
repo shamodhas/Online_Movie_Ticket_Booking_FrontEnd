@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Example of using axios for API requests
+import axios from 'axios';
 
 const MovieList = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
-        // Fetch movies from backend API
-        axios.get('/api/movies')
+        axios.get<any>('/api/movies')
             .then(response => setMovies(response.data))
             .catch(error => console.error('Error fetching movies:', error));
     }, []);

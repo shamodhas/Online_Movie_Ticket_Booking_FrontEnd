@@ -29,7 +29,9 @@ instance.interceptors.response.use(
 
       const config = {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem(constant.ACCESS_TOKEN)}`,
+          Authorization: `Bearer ${localStorage.getItem(
+            constant.ACCESS_TOKEN
+          )}`,
           isRefreshToken: true
         }
       }
@@ -37,13 +39,13 @@ instance.interceptors.response.use(
       let isAccessTokenRefreshed = false
       await axios
         .post(`${URL}`, {}, config)
-        .then(async (res) => {
+        .then(async (res: any) => {
           await localStorage.setItem(constant.ACCESS_TOKEN, res.data.result)
           isAccessTokenRefreshed = true
         })
         .catch((err) => {
           throw err
-            window.location.replace("/login")
+          window.location.replace("/login")
         })
       if (isAccessTokenRefreshed) {
         error.config.headers["Authorization"] = `Bearer ${localStorage.getItem(
