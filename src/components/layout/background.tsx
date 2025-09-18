@@ -1,9 +1,17 @@
+import { useContext, useEffect } from "react"
+import LoadingContext from "../../context/loading-context"
 
-type BackgroundProps={
-    videoSource:string
+type BackgroundProps = {
+  videoSource: string
 }
 
-export default function Background({videoSource}:BackgroundProps) {
+export default function Background({ videoSource }: BackgroundProps) {
+  const [, setLoading] = useContext(LoadingContext)
+
+  useEffect(() => {
+    setLoading(true)
+  }, [videoSource, setLoading])
+
   return (
     <div>
       <video
@@ -12,6 +20,7 @@ export default function Background({videoSource}:BackgroundProps) {
         loop
         muted
         preload="none"
+        onCanPlayThrough={() => setLoading(false)}
       >
         <source src={videoSource} type="video/mp4" />
         <source src={videoSource} type="video/ogg" />
