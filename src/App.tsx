@@ -1,6 +1,6 @@
 import "./App.css"
 import { useState } from "react"
-import { GUEST, User, UserRoles } from "./types/user"
+import { GUEST, User } from "./types/user"
 import UserContext from "./context/user-context"
 import Router from "./router/Router"
 import LoadingContext from "./context/loading-context"

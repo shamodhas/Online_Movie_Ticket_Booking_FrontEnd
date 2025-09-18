@@ -1,4 +1,3 @@
-import React from "react";
 
 export default function EyeIcon({ color }: { color: string }) {
   return (
