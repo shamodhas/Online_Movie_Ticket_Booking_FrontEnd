@@ -3,7 +3,7 @@ import Logo from "./../../assets/images/logo-white.png"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import MenuBar from "../../assets/icons/menu"
 import UserContext from "../../context/user-context"
-import { GUEST } from "../../types/user"
+import { ADMIN, CUSTOMER, GUEST, THEATER_EMPLOYEE } from "../../types/user"
 import X from "../../assets/icons/x"
 import constant from "../../configs/constant"
 
@@ -73,58 +73,58 @@ export default function Header() {
             Home
           </Link>
           {
-            // user.role === ADMIN
-            //   ? constant.adminNavLink.map((link: any) => {
-            //       return (
-            //         <Link
-            //           key={link}
-            //           onClick={() => {
-            //             isMenuOpen && setMenuOpen(false)
-            //           }}
-            //           className={`nav-link-mobile lg:nav-link-desktop ${
-            //             location.pathname === `/${link}` ? "active" : ""
-            //           }`}
-            //           to={"/" + link}
-            //         >
-            //           {link.charAt(0).toUpperCase() + link.substring(1)}
-            //         </Link>
-            //       )
-            //     })
-            //   : user.role === THEATER_EMPLOYEE
-            //   ? constant.theaterNavLink.map((link: any) => {
-            //       return (
-            //         <Link
-            //           key={link}
-            //           onClick={() => {
-            //             isMenuOpen && setMenuOpen(false)
-            //           }}
-            //           className={`nav-link-mobile lg:nav-link-desktop ${
-            //             location.pathname === `/${link}` ? "active" : ""
-            //           }`}
-            //           to={"/" + link}
-            //         >
-            //           {link.charAt(0).toUpperCase() + link.substring(1)}
-            //         </Link>
-            //       )
-            //     })
-            //   : user.role === CUSTOMER
-            //   ? constant.customerNavLink.map((link: any) => {
-            //       return (
-            //         <Link
-            //           key={link}
-            //           onClick={() => {
-            //             isMenuOpen && setMenuOpen(false)
-            //           }}
-            //           className={`nav-link-mobile lg:nav-link-desktop ${
-            //             location.pathname === `/${link}` ? "active" : ""
-            //           }`}
-            //           to={"/" + link}
-            //         >
-            //           {link.charAt(0).toUpperCase() + link.substring(1)}
-            //         </Link>
-            //       )
-            //     })
-            // :
+            user.role === ADMIN
+              ? constant.adminNavLink.map((link: any) => {
+                  return (
+                    <Link
+                      key={link}
+                      onClick={() => {
+                        isMenuOpen && setMenuOpen(false)
+                      }}
+                      className={`nav-link-mobile lg:nav-link-desktop ${
+                        location.pathname === `/${link}` ? "active" : ""
+                      }`}
+                      to={"/" + link}
+                    >
+                      {link.charAt(0).toUpperCase() + link.substring(1)}
+                    </Link>
+                  )
+                })
+              : user.role === THEATER_EMPLOYEE
+              ? constant.theaterNavLink.map((link: any) => {
+                  return (
+                    <Link
+                      key={link}
+                      onClick={() => {
+                        isMenuOpen && setMenuOpen(false)
+                      }}
+                      className={`nav-link-mobile lg:nav-link-desktop ${
+                        location.pathname === `/${link}` ? "active" : ""
+                      }`}
+                      to={"/" + link}
+                    >
+                      {link.charAt(0).toUpperCase() + link.substring(1)}
+                    </Link>
+                  )
+                })
+              : user.role === CUSTOMER
+              ? constant.customerNavLink.map((link: any) => {
+                  return (
+                    <Link
+                      key={link}
+                      onClick={() => {
+                        isMenuOpen && setMenuOpen(false)
+                      }}
+                      className={`nav-link-mobile lg:nav-link-desktop ${
+                        location.pathname === `/${link}` ? "active" : ""
+                      }`}
+                      to={"/" + link}
+                    >
+                      {link.charAt(0).toUpperCase() + link.substring(1)}
+                    </Link>
+                  )
+                })
+            :
             constant.guestNavLink.map((link: any) => {
               return (
                 <Link

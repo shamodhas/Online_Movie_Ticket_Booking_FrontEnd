@@ -5,6 +5,7 @@ interface ApiObject {
   authentication?: boolean
   endpoint?: string
   body?: any
+  multipart?: boolean
 }
 
 export async function getAllMovies(page: number, size: number) {
@@ -32,6 +33,7 @@ export async function createMovie(movieData: any): Promise<any> {
   apiObject.authentication = true
   apiObject.endpoint = `api/movies`
   apiObject.body = movieData
+  apiObject.multipart = true
   return await ApiService.callApi(apiObject)
 }
 

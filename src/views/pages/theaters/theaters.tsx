@@ -7,8 +7,11 @@ import LoadingContext from "../../../context/loading-context"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../../../context/user-context"
 import { ADMIN, THEATER_EMPLOYEE } from "../../../types/user"
+import constant from "../../../configs/constant"
 
 export default function Theaters() {
+    console.log(localStorage.getItem(constant.ACCESS_TOKEN))
+
   const [, setLoading] = useContext(LoadingContext)
   const navigate = useNavigate()
 

@@ -49,7 +49,7 @@ export default function Movies() {
             <MovieCard
               key={index}
               image={movie.imageUrl}
-              name={movie.name}
+              name={movie.title}
               language={movie.language}
             />
           )

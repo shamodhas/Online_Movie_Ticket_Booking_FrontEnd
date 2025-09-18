@@ -6,6 +6,7 @@ interface ApiObject {
   endpoint?: string
   body?: any
   type?: any
+  multipart?: boolean
 }
 
 export async function login(userCredentials: {
@@ -21,17 +22,13 @@ export async function login(userCredentials: {
   return await ApiService.callApi(apiObject)
 }
 
-export async function register(userCredentials: {
-  username: string
-  email: string
-  password: string
-  role: "Admin" | "Customer" | "TheaterOwner"
-}) {
+export async function register(userData: FormData) {
   const apiObject: ApiObject = {}
   apiObject.method = "POST"
   apiObject.authentication = false
   apiObject.endpoint = "api/auth/register"
-  apiObject.body = userCredentials
+  apiObject.body = userData
+  apiObject.multipart = true
   apiObject.type = "AUTH"
   return await ApiService.callApi(apiObject)
 }

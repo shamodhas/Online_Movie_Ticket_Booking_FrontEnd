@@ -1,7 +1,7 @@
 import Header from "./header"
 import Footer from "./footer"
 import Background from "./background"
-import VideoSource from "./../../assets/vidios/video.mp4"
+import VideoSource from "./../../assets/video/video.mp4"
 
 type PageLayoutProps = {
   children: any
