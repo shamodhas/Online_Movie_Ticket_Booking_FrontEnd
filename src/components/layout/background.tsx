@@ -1,32 +1,43 @@
-import { useContext, useEffect } from "react"
-import LoadingContext from "../../context/loading-context"
+import { useState } from "react"
+import fallbackImage from "../../assets/images/background.jpg"
 
-type BackgroundProps = {
-  videoSource: string
-}
+export default function Background() {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
 
-export default function Background({ videoSource }: BackgroundProps) {
-  const [, setLoading] = useContext(LoadingContext)
-
-  useEffect(() => {
-    setLoading(true)
-  }, [videoSource, setLoading])
+  const videoURL =
+    "https://firebasestorage.googleapis.com/v0/b/hyper-tech-425e4.firebasestorage.app/o/movie-booking-system-images%2Fvideo.mp4?alt=media&token=2bc0d775-a37b-47b0-8e4e-c7ab4619c9b9"
 
   return (
-    <div>
+    <div className="relative w-full h-full">
+      {/* Video */}
       <video
-        className="fixed w-[100%] h-[100%] object-cover z-[-10]"
+        className={`fixed w-full h-full object-cover z-[-10] ${
+          isVideoLoaded ? "opacity-100" : "opacity-0"
+        } transition-opacity duration-700`}
         autoPlay
         loop
         muted
-        preload="none"
-        onCanPlayThrough={() => setLoading(false)}
+        preload="auto"
+        onCanPlayThrough={() => setIsVideoLoaded(true)}
       >
-        <source src={videoSource} type="video/mp4" />
-        <source src={videoSource} type="video/ogg" />
-        not support Video
+        <source src={videoURL} type="video/mp4" />
+        <source src={videoURL} type="video/ogg" />
+        Your browser does not support the video tag.
       </video>
-      <div className="fixed w-[100%] h-[100%] bg-black z-[-1] opacity-[.5]"></div>
+
+      {/* Fallback image */}
+      {!isVideoLoaded && (
+        <div className="fixed w-full h-full z-[-10]">
+          <img
+            src={fallbackImage}
+            alt="Loading video..."
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      {/* Overlay */}
+      <div className="fixed w-full h-full bg-black z-[-1] opacity-50"></div>
     </div>
   )
 }

@@ -1,6 +1,8 @@
 export const ACCESS_TOKEN = "quick-team-access"
 export const USER_DETAIL = "quick-team-admin-user-details"
+
 export const guestNavLink = ["about", "movies", "theaters"]
+export const customerNavLink = ["about", "movies", "theaters"]
 export const theaterNavLink = [
   "about",
   "movies",
@@ -8,8 +10,16 @@ export const theaterNavLink = [
   "my-movies",
   "my-theaters"
 ]
-export const customerNavLink = ["about", "movies", "theaters"]
-export const adminNavLink = ["about", "movies", "theaters", "theateror request"]
+
+// Admin can see all links
+export const adminNavLink = Array.from(
+  new Set([
+    ...guestNavLink,
+    ...customerNavLink,
+    ...theaterNavLink,
+    "theateror request"
+  ])
+)
 
 const constant = {
   ACCESS_TOKEN,
@@ -21,3 +31,27 @@ const constant = {
 }
 
 export default constant
+
+// export const ACCESS_TOKEN = "quick-team-access"
+// export const USER_DETAIL = "quick-team-admin-user-details"
+// export const guestNavLink = ["about", "movies", "theaters"]
+// export const theaterNavLink = [
+//   "about",
+//   "movies",
+//   "theaters",
+//   "my-movies",
+//   "my-theaters"
+// ]
+// export const customerNavLink = ["about", "movies", "theaters"]
+// export const adminNavLink = ["about", "movies", "theaters", "theateror request"]
+
+// const constant = {
+//   ACCESS_TOKEN,
+//   USER_DETAIL,
+//   guestNavLink,
+//   customerNavLink,
+//   adminNavLink,
+//   theaterNavLink
+// }
+
+// export default constant
